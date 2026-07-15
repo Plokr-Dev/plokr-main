@@ -1,0 +1,158 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { PLOKR_APP } from '../lib/constants';
+import { ShieldCheck } from 'lucide-react';
+---
+
+<Layout
+  title="Security & Data Integrity | Plokr"
+  description="Read-only by design, authorize-first by default. Plokr is SOC 2 Type II, GDPR-ready, with data encrypted in transit and at rest."
+  current="security"
+>
+  <header class="phero dark">
+    <div class="wrap">
+      <nav class="crumbs" aria-label="Breadcrumb">
+        <a href="/">Home</a><span aria-hidden="true">/</span>
+        <span>Product</span><span aria-hidden="true">/</span>
+        <span style="color:#fff">Security</span>
+      </nav>
+      <span class="eyebrow">Security &amp; data integrity</span>
+      <h1>Your data <em>stays yours</em>.</h1>
+      <p class="lede">Plokr is built to earn the trust of security-conscious teams. Read-only by design, authorize-first by default, and never a place your customer data lives without explicit consent.</p>
+      <div class="cta">
+        <a class="btn btn-primary btn-lg" href="/contact">Request security docs</a>
+        <a class="btn btn-line btn-lg" href={PLOKR_APP} data-auth="signup" style="background:rgba(255,255,255,.06);border-color:rgba(255,255,255,.22);color:#fff">Start free trial</a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Four principles -->
+  <section class="sec">
+    <div class="wrap">
+      <div class="sec-head">
+        <span class="ftag">Principles</span>
+        <h2 style="margin-top:16px">Four commitments behind every connection.</h2>
+      </div>
+      <div class="pillars" style="max-width:920px;margin:0 auto">
+        {[
+          ['Authorize-first access','Plokr sees nothing until you connect a tool and approve its scopes. No data is read without your explicit consent.'],
+          ['Read-only by default','We never write to your boards, repos, or pipelines. Plokr observes — it does not modify your source of truth.'],
+          ['Granular, revocable scopes','Grant access per project and per repo, and revoke any connection instantly. Tokens are removed on disconnect.'],
+          ['Encrypted & isolated','Data encrypted in transit (TLS 1.2+) and at rest (AES-256). Tokens are isolated per workspace.'],
+        ].map(([title, desc]) => (
+          <div class="pillar">
+            <span class="pi" aria-hidden="true">
+              <ShieldCheck strokeWidth={1.8} />
+            </span>
+            <h4>{title}</h4>
+            <p>{desc}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- Can / can't -->
+  <section class="sec soft">
+    <div class="wrap">
+      <div class="sec-head">
+        <h2>What Plokr can — and can't — do.</h2>
+        <p>Transparency about exactly what we touch.</p>
+      </div>
+      <div class="cclist">
+        <div class="ccbox ok">
+          <h3><span class="mk" aria-hidden="true">✓</span>What Plokr reads</h3>
+          <ul>
+            {['Jira & Trello board, sprint, and issue metadata','Repository names, branches, and commit metadata','Dependency manifests and lockfiles (e.g. package.json)','Public vulnerability advisories and CVE data'].map(t => (
+              <li><span class="mk" aria-hidden="true">✓</span>{t}</li>
+            ))}
+          </ul>
+        </div>
+        <div class="ccbox no">
+          <h3><span class="mk" aria-hidden="true">✕</span>What Plokr never does</h3>
+          <ul>
+            {['Write, edit, or delete anything in your tools','Clone or store your source code','Access data outside the scopes you grant','Share or sell your data to third parties'].map(t => (
+              <li><span class="mk" aria-hidden="true">✕</span>{t}</li>
+            ))}
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Authorize-first detail -->
+  <section class="sec">
+    <div class="wrap">
+      <div class="frow">
+        <div>
+          <span class="ftag">Authorize-first</span>
+          <h2>You approve every scope, and can revoke in one click.</h2>
+          <p class="lead">Connections use standard OAuth with the narrowest read-only scopes. You see exactly what each grant allows before approving, and disconnecting removes Plokr's access and stored tokens immediately.</p>
+          <ul class="checklist">
+            {['Least-privilege, read-only OAuth scopes','Per-project and per-repo granularity','Instant revocation from settings','Tokens encrypted and isolated per workspace'].map(t => (
+              <li><span class="tick" aria-hidden="true">✓</span>{t}</li>
+            ))}
+          </ul>
+        </div>
+        <div class="card" aria-label="OAuth authorization scope example">
+          <div class="ch"><span class="t">Authorize Plokr</span><span class="chip">read-only · OAuth</span></div>
+          {[
+            ['#2A6FDB','J','Jira — Payments project','Read issues, sprints & status'],
+            ['#1F2328','G','GitHub — acme/api-gateway','Read repo metadata & manifests'],
+            ['#0B66C3','T','Trello — Roadmap board','Read cards, lists & members'],
+          ].map(([bg, letter, name, desc]) => (
+            <div class="scope">
+              <span class="si" style={`background:${bg}`}>{letter}</span>
+              <span class="sn"><b>{name}</b><span>{desc}</span></span>
+              <span class="ro">READ-ONLY</span>
+            </div>
+          ))}
+          <div class="permfoot">
+            <span>You control access — revoke anytime.</span>
+            <span class="stamp">✓ Authorized by you</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Compliance badges -->
+  <section class="sec soft">
+    <div class="wrap">
+      <div class="sec-head">
+        <span class="ftag">Compliance</span>
+        <h2 style="margin-top:16px">Built for security reviews.</h2>
+      </div>
+      <div class="badges">
+        {[
+          ['SOC 2 Type II','Audited annually'],
+          ['GDPR','EU data ready · DPA available'],
+          ['Encryption','TLS 1.2+ · AES-256 at rest'],
+          ['Audit logs','Full activity trail on Enterprise'],
+        ].map(([title, sub]) => (
+          <div class="badge">
+            <span class="bi" aria-hidden="true">
+              <ShieldCheck strokeWidth={1.8} />
+            </span>
+            <b>{title}</b>
+            <span>{sub}</span>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="sec ctaband" style="padding-top:0">
+    <div class="wrap">
+      <div class="box">
+        <h2>Need our security package?</h2>
+        <p>We'll share our SOC 2 report, DPA, and architecture overview under NDA.</p>
+        <div class="cta">
+          <a class="btn btn-primary btn-lg" href="/contact" style="background:#fff;color:#0C1A2B">Request documents</a>
+          <a class="btn btn-line btn-lg" href="/dpa">Read the DPA</a>
+        </div>
+      </div>
+    </div>
+  </section>
+</Layout>

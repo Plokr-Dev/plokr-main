@@ -1,0 +1,69 @@
+---
+import Layout from '../layouts/Layout.astro';
+import ContactForm from '../components/ContactForm';
+import { Mail, MessageSquare, ShieldCheck } from 'lucide-react';
+---
+
+<Layout
+  title="Contact | Plokr"
+  description="Book a demo tailored to your stack, or reach the right team directly. Talk to sales, get support, or request our security package."
+  current="contact"
+>
+  <header class="phero">
+    <div class="wrap">
+      <span class="eyebrow">Contact</span>
+      <h1>Talk to us, or see Plokr live.</h1>
+      <p class="lede">Book a walkthrough tailored to your stack, or reach the right team directly. We usually reply within one business day.</p>
+    </div>
+  </header>
+
+  <section class="sec">
+    <div class="wrap">
+      <div class="contact-grid">
+        <!-- Direct channels -->
+        <div>
+          <h3 style="font-family:'Archivo';font-size:18px;margin-bottom:8px">Reach us directly</h3>
+          {[
+            {
+              title: 'Talk to sales',
+              desc: 'Plans, procurement, and security reviews.',
+              email: 'sales@plokr.com',
+              icon: Mail,
+            },
+            {
+              title: 'Get support',
+              desc: 'Questions about your workspace or setup.',
+              email: 'support@plokr.com',
+              icon: MessageSquare,
+            },
+            {
+              title: 'Security & compliance',
+              desc: 'Request our SOC 2 report and DPA.',
+              email: 'security@plokr.com',
+              icon: ShieldCheck,
+            },
+          ].map((ch) => {
+            const Icon = ch.icon;
+            return (
+            <div class="chan">
+              <span class="ci" aria-hidden="true">
+                <Icon strokeWidth={1.8} />
+              </span>
+              <div>
+                <h4>{ch.title}</h4>
+                <p>{ch.desc}</p>
+                <a href={`mailto:${ch.email}`}>{ch.email}</a>
+              </div>
+            </div>
+            );
+          })}
+        </div>
+
+        <!-- Demo request form (React island) -->
+        <div class="formcard">
+          <ContactForm client:load />
+        </div>
+      </div>
+    </div>
+  </section>
+</Layout>

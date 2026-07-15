@@ -1,0 +1,63 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import { PLOKR_APP } from '../../lib/constants';
+---
+
+<Layout
+  title="Why dependency risk is a delivery problem, not just a security one | Plokr Blog"
+  description="Outdated and vulnerable packages don't just create CVEs — they quietly slow every team that depends on them. Here's how we think about ranking risk by impact."
+  current="blog"
+>
+  <header class="phero" style="padding-bottom:38px">
+    <div class="articlehead">
+      <nav class="crumbs" aria-label="Breadcrumb">
+        <a href="/blog">Blog</a>
+        <span aria-hidden="true">/</span>
+        <span style="color:var(--blue-d)">Engineering</span>
+      </nav>
+      <h1 style="font-size:42px;margin-top:18px">
+        Why dependency risk is a delivery problem, not just a security one
+      </h1>
+      <div class="byline">
+        <span class="av" aria-hidden="true">MO</span>
+        <div>
+          <div class="bn">Maya Okonkwo</div>
+          <div class="bm">Apr 18, 2026 · 6 min read</div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <div class="herofig">
+    <div class="img" role="img" aria-label="Dependency risk dashboard illustration"></div>
+  </div>
+
+  <article class="sec" style="padding-top:48px">
+    <div class="wrap-xs">
+      <div class="prose">
+        <p>Most teams treat dependency upgrades as a security chore — something the platform team batches up once a quarter when a scanner goes red. But the cost of drifting dependencies shows up long before a CVE does, and it shows up as <strong>slower delivery</strong>.</p>
+        <p>When a service is three majors behind on its core framework, every new feature pays a tax: more workarounds, more flaky tests, more "we can't use that API yet." The risk isn't only that you'll get breached. It's that you'll get slow.</p>
+        <h2>Risk is about impact, not count</h2>
+        <p>A dashboard that says "47 outdated packages" is useless. Two of those might be one patch behind on a dev-only linter. One might be a remotely exploitable flaw in the library that signs your auth tokens. Treating them equally is how real risk hides in plain sight.</p>
+        <blockquote>The goal isn't zero outdated dependencies. It's knowing, at any moment, which one would hurt the most to ignore.</blockquote>
+        <p>That's why Plokr ranks every finding by severity <em>and</em> real exploitability, then weights it by where the dependency sits in your system. A vulnerable package in your public API gateway outranks the same package buried in an internal tool.</p>
+        <h2>Putting it next to delivery</h2>
+        <p>Here's the part most tools miss: the same teams shipping features are the ones who have to absorb upgrades. So we put dependency health <strong>next to sprint health</strong>. When a squad's velocity dips the same week its risk score climbs, that's a conversation worth having — and now it's one screen, not two tools.</p>
+        <ul>
+          <li>Rank by exploitability and blast radius, not raw count</li>
+          <li>Show risk next to the team that owns the code</li>
+          <li>Offer the safe upgrade path, not just the warning</li>
+        </ul>
+        <p>None of this requires a new process. Plokr reads your manifests in read-only mode and does the ranking for you — so the next time someone asks "are we exposed?", the answer takes ten seconds, not an afternoon.</p>
+      </div>
+
+      <div class="card" style="margin-top:40px;display:flex;align-items:center;gap:20px;padding:24px 26px">
+        <div style="flex:1">
+          <h3 style="font-family:'Archivo';font-size:18px;margin-bottom:6px">See your dependency risk, ranked.</h3>
+          <p style="color:var(--muted);font-size:14px">Connect a repo and get a fixable list on your first scan.</p>
+        </div>
+        <a class="btn btn-primary" href={PLOKR_APP} data-auth="signup">Start free trial</a>
+      </div>
+    </div>
+  </article>
+</Layout>

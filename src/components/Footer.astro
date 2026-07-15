@@ -1,0 +1,69 @@
+---
+const cols = [
+  {
+    heading: 'Product',
+    links: [
+      { label: 'Jira Monitoring', href: '/jira-monitoring' },
+      { label: 'Dependency Checker', href: '/dependency-checker' },
+      { label: 'Integrations', href: '/integrations' },
+      { label: 'Pricing', href: '/pricing' },
+      { label: 'Security', href: '/security' },
+    ],
+  },
+  {
+    heading: 'Company',
+    links: [
+      { label: 'About', href: '/about' },
+      { label: 'Blog', href: '/blog' },
+      { label: 'Changelog', href: '/changelog' },
+      { label: 'Contact', href: '/contact' },
+    ],
+  },
+  {
+    heading: 'Resources',
+    links: [
+      { label: 'Docs', href: '/docs' },
+      { label: 'Status', href: '#' },
+      { label: 'API reference', href: '/docs' },
+      { label: 'Community', href: '#' },
+    ],
+  },
+  {
+    heading: 'Legal',
+    links: [
+      { label: 'Privacy', href: '/privacy' },
+      { label: 'Terms', href: '/terms' },
+      { label: 'DPA', href: '/dpa' },
+      { label: 'Security', href: '/security' },
+    ],
+  },
+];
+---
+
+<footer>
+  <div class="wrap">
+    <div class="grid">
+      <div>
+        <a class="logo" href="/" aria-label="Plokr home">
+          <span class="plokr-logo">plokr<i class="nub" aria-hidden="true"></i></span>
+        </a>
+        <p class="fdesc">
+          Mission control for engineering — real-time Jira monitoring and dependency health
+          across GitHub, Bitbucket, GitLab and Trello.
+        </p>
+      </div>
+      {cols.map(col => (
+        <div class="fcol">
+          <h5>{col.heading}</h5>
+          {col.links.map(link => (
+            <a href={link.href}>{link.label}</a>
+          ))}
+        </div>
+      ))}
+    </div>
+    <div class="legal">
+      <span>© {new Date().getFullYear()} Plokr, Inc.</span>
+      <span>SOC 2 Type II · GDPR ready</span>
+    </div>
+  </div>
+</footer>

@@ -1,0 +1,153 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { PLOKR_APP } from '../lib/constants';
+import { Network } from 'lucide-react';
+
+const repos = [
+  { name: 'acme/api-gateway',   branch: 'main', outdated: '2 outdated', vuln: '1 vuln', status: 'vuln' },
+  { name: 'acme/ledger-svc',    branch: 'main', outdated: '0 outdated', vuln: '0 vuln', status: 'ok'   },
+  { name: 'acme/web-dashboard', branch: 'main', outdated: '5 outdated', vuln: '0 vuln', status: 'out'  },
+  { name: 'acme/payments-sdk',  branch: 'main', outdated: '1 outdated', vuln: '1 vuln', status: 'vuln' },
+];
+
+const dotColor: Record<string, string> = { vuln: '#EF4444', out: '#F59E0B', ok: '#10B981' };
+
+const feats = [
+  ['Continuous scanning', 'Every push and on a schedule, Plokr re-scans manifests and lockfiles across all your repos — GitHub, Bitbucket and GitLab.'],
+  ['Severity-ranked CVEs', 'Vulnerabilities are ranked by severity and exploitability with linked CVE detail, so you fix what actually matters first.'],
+  ['Outdated detection', 'Track packages drifting behind latest, with safe-upgrade suggestions and breaking-change warnings.'],
+  ['One-click PR drafts', 'Generate upgrade pull requests with changelog context, ready for your team to review and merge.'],
+  ['Org-wide risk view', 'A single dashboard ranks every service and library by risk — no more spreadsheets of dependencies.'],
+  ['Policy & alerts', 'Set thresholds and get notified by email or webhook the moment a repo breaches policy.'],
+];
+
+const ecosystems = ['npm','pnpm','yarn','pip / PyPI','Poetry','Maven','Gradle','Go modules','Cargo','Composer','RubyGems','NuGet'];
+---
+
+<Layout
+  title="Dependency Checker | Plokr"
+  description="Continuous dependency scanning across all your repos. Severity-ranked CVE alerts with safe upgrade guidance for GitHub, Bitbucket, and GitLab."
+  current="deps"
+>
+  <header class="phero dark" style="padding-bottom:64px">
+    <div class="wrap" style="display:grid;grid-template-columns:1fr 1.02fr;gap:54px;align-items:center">
+      <div>
+        <nav class="crumbs" aria-label="Breadcrumb">
+          <a href="/">Home</a><span aria-hidden="true">/</span>
+          <span>Product</span><span aria-hidden="true">/</span>
+          <span style="color:#fff">Dependency Checker</span>
+        </nav>
+        <span class="eyebrow">Dependency Checker</span>
+        <h1>Outdated and vulnerable, <em>caught early</em>.</h1>
+        <p class="lede">Connect GitHub, Bitbucket and GitLab and Plokr audits every repo's dependencies around the clock — ranking risk so your team fixes what matters first.</p>
+        <div class="cta">
+          <a class="btn btn-primary btn-lg" href={PLOKR_APP} data-auth="signup">Start free trial</a>
+          <a class="btn btn-line btn-lg" href="/contact" style="background:rgba(255,255,255,.06);border-color:rgba(255,255,255,.22);color:#fff">Book a demo</a>
+        </div>
+      </div>
+
+      <div class="card" style="background:var(--navy2);border-color:rgba(255,255,255,.1)" aria-label="Dependency risk dashboard preview">
+        <div class="ch" style="border-color:rgba(255,255,255,.08)">
+          <span class="t" style="color:#fff">Dependency risk · acme org</span>
+          <span class="chip" style="color:rgba(255,255,255,.5);border-color:rgba(255,255,255,.14)">14 repos</span>
+        </div>
+        {repos.map(r => (
+          <div class="reporow">
+            <span class="rdot" style={`background:${dotColor[r.status]}`}></span>
+            <span class="rn">{r.name}</span>
+            <span class="br">{r.branch}</span>
+            <span class="cnt">{r.outdated}</span>
+            <span class={`tag ${r.status}`}>{r.vuln}</span>
+          </div>
+        ))}
+      </div>
+    </div>
+  </header>
+
+  <!-- Capabilities -->
+  <section class="sec">
+    <div class="wrap">
+      <div class="sec-head">
+        <span class="ftag">Capabilities</span>
+        <h2 style="margin-top:16px">From noisy alerts to a ranked, fixable list.</h2>
+      </div>
+      <div class="grid3">
+        {feats.map(([title, desc]) => (
+          <div class="feat-card">
+            <span class="ic" aria-hidden="true">
+              <Network strokeWidth={1.8} />
+            </span>
+            <h3>{title}</h3><p>{desc}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- CVE detail section -->
+  <section class="sec soft">
+    <div class="wrap">
+      <div class="frow rev">
+        <div>
+          <span class="ftag">Severity-ranked</span>
+          <h2>Fix the one that matters, not all forty.</h2>
+          <p class="lead">Plokr ranks every finding by severity and real exploitability, links the CVE, and shows the exact safe version to move to — so triage takes minutes, not afternoons.</p>
+          <ul class="checklist">
+            {['CVSS severity with exploit-maturity context','Direct CVE & advisory links','Safe upgrade target with breaking-change notes','One-click PR draft with changelog'].map(t => (
+              <li><span class="tick" aria-hidden="true">✓</span>{t}</li>
+            ))}
+          </ul>
+        </div>
+        <div class="card">
+          <div class="ch">
+            <span class="t mono" style="font-size:14px">jsonwebtoken</span>
+            <span class="chip">acme/api-gateway</span>
+          </div>
+          <div style="padding:20px">
+            <div class="cve">
+              <div class="cid">CVE-2022-23529 · HIGH (7.6)</div>
+              <div class="sevbar"><i style="width:76%"></i></div>
+              <div style="font-size:13.5px;color:var(--ink2);line-height:1.5">
+                Improper key-type verification can allow JWT signature bypass. Affects 8.x and below.
+              </div>
+            </div>
+            <div class="drow" style="padding:16px 2px 0;border-top:0">
+              <span class="ver">8.5.1</span>
+              <span style="color:var(--muted)">→</span>
+              <span class="ver" style="color:var(--ok)">9.0.2</span>
+              <a class="btn btn-primary" href={PLOKR_APP} data-auth="signup" style="margin-left:auto;height:38px;padding:0 16px;font-size:13.5px">Draft PR</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Ecosystems -->
+  <section class="sec">
+    <div class="wrap">
+      <div class="sec-head">
+        <span class="ftag">Ecosystems</span>
+        <h2 style="margin-top:16px">Scans the package managers your repos actually use.</h2>
+        <p>Across GitHub, Bitbucket and GitLab — public and private.</p>
+      </div>
+      <div class="ecos">
+        {ecosystems.map(e => <span class="eco">{e}</span>)}
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="sec ctaband">
+    <div class="wrap">
+      <div class="box">
+        <h2>See your dependency risk in 5 minutes.</h2>
+        <p>Connect a repo and Plokr returns a ranked, fixable list on your first scan.</p>
+        <div class="cta">
+          <a class="btn btn-primary btn-lg" href={PLOKR_APP} data-auth="signup" style="background:#fff;color:#0C1A2B">Start free trial</a>
+          <a class="btn btn-line btn-lg" href="/integrations">View integrations</a>
+        </div>
+      </div>
+    </div>
+  </section>
+</Layout>

@@ -1,0 +1,342 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import { PLOKR_APP, CTA_INTEGRATE } from '../../lib/constants';
+import { Network, Database, Shield, GitBranch, BarChart3, Lock } from 'lucide-react';
+
+const capabilities = [
+  ['Revenue Leakage Detection', 'Automatically detect and prevent revenue leakage across Zuora, Stripe, and Snowflake. Real-time reconciliation with root-cause analysis.'],
+  ['Cybersecurity Monitoring', 'Monitor CloudTrail events and Okta logs for anomalous behavior. AI-powered threat detection with instant alerts.'],
+  ['Distributed Integration', 'Deploy on-premises or self-hosted. Complete control over data, no cloud dependency.'],
+  ['DAG Pipeline Management', 'Visual pipeline orchestration with automatic data flow tracking and error recovery.'],
+  ['Multi-Source Correlation', 'Correlate signals across billing systems, cloud logs, and identity platforms in one unified view.'],
+  ['Compliance & Audit Trail', 'Full audit logging, data residency control, and SOC 2 Type II ready.'],
+];
+
+const revenueLeakageFeatures = [
+  'Zuora invoice-to-subscription reconciliation',
+  'Stripe payment failure analysis',
+  'Snowflake revenue data warehouse sync',
+  'Automated refund & chargeback detection',
+  'Revenue recognition compliance reporting',
+];
+
+const cybersecurityFeatures = [
+  'CloudTrail API call monitoring',
+  'Okta login anomaly detection',
+  'Privilege escalation alerts',
+  'Cross-service correlation analysis',
+  'Compliance report generation (SOC 2, PCI-DSS)',
+];
+---
+
+<Layout
+  title="Plokr Integrate | Self-Service Integration Platform"
+  description="Self-service data integration platform with on-premises deployment. Monitor revenue leakage across billing systems and detect cybersecurity threats with AI-powered anomaly detection."
+  current="integrate"
+>
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "SoftwareApplication",
+      "name": "Plokr Integrate",
+      "description": "Self-service integration platform for revenue leakage detection and cybersecurity monitoring. Deploy on-premises or self-hosted.",
+      "url": "https://plokr.com/integrate",
+      "applicationCategory": "BusinessApplication",
+      "offers": {
+        "@type": "Offer",
+        "price": "Contact sales",
+        "priceCurrency": "USD"
+      },
+      "operatingSystem": "Linux, Windows, macOS",
+      "requirements": "Docker, Kubernetes, or bare-metal deployment",
+      "featureList": [
+        "DAG pipeline orchestration",
+        "Revenue leakage detection",
+        "Cybersecurity anomaly detection",
+        "On-premises deployment",
+        "Real-time data integration"
+      ]
+    }
+  </script>
+
+  <!-- Hero Section -->
+  <header class="phero dark" style="padding-bottom:64px">
+    <div class="wrap" style="display:grid;grid-template-columns:1fr 1.02fr;gap:54px;align-items:center">
+      <div>
+        <nav class="crumbs" aria-label="Breadcrumb">
+          <a href="/">Home</a><span aria-hidden="true">/</span>
+          <span>Product</span><span aria-hidden="true">/</span>
+          <span style="color:#fff">Integrate</span>
+        </nav>
+        <span class="eyebrow">Self-Service Integration Platform</span>
+        <h1>Data integration, <em>on your terms</em>.</h1>
+        <p class="lede">Deploy Plokr Integrate on-premises or self-hosted to detect revenue leakage and security threats in real-time. No cloud lock-in, complete data control.</p>
+        <div class="cta">
+          <a class="btn btn-primary btn-lg" href={PLOKR_APP} data-auth="signup">{CTA_INTEGRATE}</a>
+          <a class="btn btn-line btn-lg" href="/contact" style="background:rgba(255,255,255,.06);border-color:rgba(255,255,255,.22);color:#fff">Schedule demo</a>
+        </div>
+      </div>
+
+      <!-- DAG Pipeline Visual Mockup -->
+      <div class="card" style="background:var(--navy2);border-color:rgba(255,255,255,.1)" aria-label="DAG pipeline orchestration mockup">
+        <div class="ch" style="border-color:rgba(255,255,255,.08)">
+          <span class="t" style="color:#fff">Pipeline DAG · Revenue Leakage</span>
+          <span class="chip" style="color:rgba(255,255,255,.5);border-color:rgba(255,255,255,.14)">running</span>
+        </div>
+        <div style="padding:20px;position:relative;height:280px">
+          <!-- SVG DAG visualization -->
+          <svg viewBox="0 0 340 240" width="100%" height="240" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
+            <!-- Grid background -->
+            <defs>
+              <linearGradient id="dag-flow" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0" stop-color="#3B82F6" stop-opacity="0.3"/>
+                <stop offset="1" stop-color="#8B5CF6" stop-opacity="0.1"/>
+              </linearGradient>
+            </defs>
+
+            <!-- Nodes -->
+            <!-- Layer 1: Sources -->
+            <rect x="10" y="20" width="60" height="40" rx="6" fill="#10B981" opacity="0.9"/>
+            <text x="40" y="48" text-anchor="middle" fill="#fff" font-size="11" font-weight="600">Zuora</text>
+
+            <rect x="100" y="20" width="60" height="40" rx="6" fill="#10B981" opacity="0.9"/>
+            <text x="130" y="48" text-anchor="middle" fill="#fff" font-size="11" font-weight="600">Stripe</text>
+
+            <rect x="190" y="20" width="60" height="40" rx="6" fill="#10B981" opacity="0.9"/>
+            <text x="220" y="48" text-anchor="middle" fill="#fff" font-size="11" font-weight="600">Snowflake</text>
+
+            <!-- Layer 2: Transform -->
+            <rect x="55" y="100" width="70" height="40" rx="6" fill="#3B82F6" opacity="0.9"/>
+            <text x="90" y="128" text-anchor="middle" fill="#fff" font-size="11" font-weight="600">Normalize</text>
+
+            <rect x="165" y="100" width="70" height="40" rx="6" fill="#3B82F6" opacity="0.9"/>
+            <text x="200" y="128" text-anchor="middle" fill="#fff" font-size="11" font-weight="600">Reconcile</text>
+
+            <!-- Layer 3: Output -->
+            <rect x="95" y="180" width="90" height="40" rx="6" fill="#8B5CF6" opacity="0.9"/>
+            <text x="140" y="208" text-anchor="middle" fill="#fff" font-size="11" font-weight="600">Leakage Alert</text>
+
+            <!-- Edges -->
+            <line x1="40" y1="60" x2="90" y2="100" stroke="#3B82F6" stroke-width="1.5" stroke-dasharray="2,2" opacity="0.6"/>
+            <line x1="130" y1="60" x2="90" y2="100" stroke="#3B82F6" stroke-width="1.5" stroke-dasharray="2,2" opacity="0.6"/>
+            <line x1="90" y1="140" x2="165" y2="100" stroke="#3B82F6" stroke-width="1.5" stroke-dasharray="2,2" opacity="0.6"/>
+            <line x1="220" y1="60" x2="200" y2="100" stroke="#3B82F6" stroke-width="1.5" stroke-dasharray="2,2" opacity="0.6"/>
+            <line x1="165" y1="140" x2="140" y2="180" stroke="#8B5CF6" stroke-width="1.5" stroke-dasharray="2,2" opacity="0.6"/>
+            <line x1="90" y1="140" x2="140" y2="180" stroke="#8B5CF6" stroke-width="1.5" stroke-dasharray="2,2" opacity="0.6"/>
+
+            <!-- Status indicators -->
+            <circle cx="50" cy="35" r="5" fill="#10B981"/>
+            <circle cx="140" cy="35" r="5" fill="#10B981"/>
+            <circle cx="230" cy="35" r="5" fill="#10B981"/>
+            <circle cx="100" cy="115" r="5" fill="#3B82F6"/>
+            <circle cx="210" cy="115" r="5" fill="#3B82F6"/>
+            <circle cx="150" cy="195" r="5" fill="#8B5CF6"/>
+          </svg>
+        </div>
+        <div style="padding:0 20px 16px;border-top:1px solid rgba(255,255,255,.08);font-size:12px;color:rgba(255,255,255,.6)">
+          <span style="display:inline-block;margin-right:12px"><span style="display:inline-block;width:8px;height:8px;background:#10B981;border-radius:2px;margin-right:4px;vertical-align:middle"></span>Sources</span>
+          <span style="display:inline-block;margin-right:12px"><span style="display:inline-block;width:8px;height:8px;background:#3B82F6;border-radius:2px;margin-right:4px;vertical-align:middle"></span>Transform</span>
+          <span style="display:inline-block"><span style="display:inline-block;width:8px;height:8px;background:#8B5CF6;border-radius:2px;margin-right:4px;vertical-align:middle"></span>Output</span>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Capabilities Grid -->
+  <section class="sec">
+    <div class="wrap">
+      <div class="sec-head">
+        <span class="ftag">Capabilities</span>
+        <h2 style="margin-top:16px">Data integration built for control and compliance.</h2>
+      </div>
+      <div class="grid3">
+        {capabilities.map(([title, desc]) => (
+          <div class="feat-card">
+            <span class="ic" aria-hidden="true">
+              {title.includes('Revenue') && <BarChart3 strokeWidth={1.8} />}
+              {title.includes('Cybersecurity') && <Shield strokeWidth={1.8} />}
+              {title.includes('Distributed') && <Lock strokeWidth={1.8} />}
+              {title.includes('DAG') && <Network strokeWidth={1.8} />}
+              {title.includes('Multi-Source') && <Database strokeWidth={1.8} />}
+              {title.includes('Compliance') && <GitBranch strokeWidth={1.8} />}
+            </span>
+            <h3>{title}</h3>
+            <p>{desc}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- Revenue Leakage Module Section -->
+  <section class="sec soft">
+    <div class="wrap">
+      <div class="frow">
+        <div>
+          <span class="ftag">Revenue Leakage Detection</span>
+          <h2>Stop revenue from slipping through the cracks.</h2>
+          <p class="lead">Plokr Integrate watches your billing pipeline across Zuora, Stripe, and Snowflake. Detect invoice mismatches, subscription discrepancies, and chargeback patterns before they impact your bottom line.</p>
+          <ul class="checklist">
+            {revenueLeakageFeatures.map(feature => (
+              <li><span class="tick" aria-hidden="true">✓</span>{feature}</li>
+            ))}
+          </ul>
+        </div>
+        <div class="card" style="background:var(--navy2);border-color:rgba(255,255,255,.1)">
+          <div class="ch" style="border-color:rgba(255,255,255,.08)">
+            <span class="t" style="color:#fff;font-family:monospace;font-size:13px">revenue_reconciliation.log</span>
+            <span class="chip" style="color:rgba(255,255,255,.5);border-color:rgba(255,255,255,.14)">live</span>
+          </div>
+          <div style="padding:16px;font-family:monospace;font-size:12px;color:rgba(255,255,255,.7);line-height:1.6;overflow-y:auto;max-height:200px">
+            <div style="color:rgba(255,255,255,.5)">[2026-06-10 14:32:18] ZUORA-INV-4521 matched Stripe ch_1234</div>
+            <div style="color:rgba(255,255,255,.5)">[2026-06-10 14:33:42] STRIPE-ch_5678 orphaned (no Zuora match)</div>
+            <div style="color:#EF4444">[2026-06-10 14:35:01] ALERT: Subscription SKU mismatch detected</div>
+            <div style="color:rgba(255,255,255,.5)">[2026-06-10 14:36:19] SNOWFLAKE sync: 2,847 transactions reconciled</div>
+            <div style="color:#10B981">[2026-06-10 14:37:33] Refund automation: $342.50 processed (6 items)</div>
+            <div style="color:rgba(255,255,255,.5)">[2026-06-10 14:38:55] Chargeback pattern: 3% elevated vs. 30-day avg</div>
+            <div style="color:#EF4444">[2026-06-10 14:39:22] CRITICAL: $12,450 discrepancy detected in ACH batch</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Cybersecurity Module Section -->
+  <section class="sec">
+    <div class="wrap">
+      <div class="frow rev">
+        <div class="card" style="background:var(--navy2);border-color:rgba(255,255,255,.1)">
+          <div class="ch" style="border-color:rgba(255,255,255,.08)">
+            <span class="t" style="color:#fff">Anomaly Detection · 24h</span>
+            <span class="chip" style="color:rgba(255,255,255,.5);border-color:rgba(255,255,255,.14)">3 threats</span>
+          </div>
+          <div style="padding:16px">
+            <!-- Threat cards -->
+            <div style="border:1px solid rgba(255,255,255,.1);border-radius:6px;padding:12px;margin-bottom:10px;background:rgba(239,68,68,.08)">
+              <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
+                <span style="font-weight:600;color:#EF4444">Privilege Escalation</span>
+                <span style="font-size:12px;background:rgba(239,68,68,.2);color:#EF4444;padding:2px 6px;border-radius:3px">CRITICAL</span>
+              </div>
+              <div style="font-size:12px;color:rgba(255,255,255,.6)">User jsmith (Okta) assumed 5 roles in 2 min</div>
+            </div>
+
+            <div style="border:1px solid rgba(255,255,255,.1);border-radius:6px;padding:12px;margin-bottom:10px;background:rgba(251,146,60,.08)">
+              <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
+                <span style="font-weight:600;color:#FB923C">Unusual API Activity</span>
+                <span style="font-size:12px;background:rgba(251,146,60,.2);color:#FB923C;padding:2px 6px;border-radius:3px">HIGH</span>
+              </div>
+              <div style="font-size:12px;color:rgba(255,255,255,.6)">CloudTrail: 847 API calls in 5 min (vs 12 avg)</div>
+            </div>
+
+            <div style="border:1px solid rgba(255,255,255,.1);border-radius:6px;padding:12px;background:rgba(59,130,246,.08)">
+              <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
+                <span style="font-weight:600;color:#3B82F6">Cross-Region Login</span>
+                <span style="font-size:12px;background:rgba(59,130,246,.2);color:#3B82F6;padding:2px 6px;border-radius:3px">MEDIUM</span>
+              </div>
+              <div style="font-size:12px;color:rgba(255,255,255,.6)">Okta: Login from Tokyo then London in 8 min</div>
+            </div>
+          </div>
+        </div>
+        <div>
+          <span class="ftag">Cybersecurity Monitoring</span>
+          <h2>Detect threats in real-time across your cloud infrastructure.</h2>
+          <p class="lead">Monitor CloudTrail API activity and Okta authentication patterns. Plokr's AI-powered anomaly detection flags privilege escalation, unusual access patterns, and credential abuse in seconds.</p>
+          <ul class="checklist">
+            {cybersecurityFeatures.map(feature => (
+              <li><span class="tick" aria-hidden="true">✓</span>{feature}</li>
+            ))}
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- On-Prem & Self-Hosted Highlight -->
+  <section class="sec alt">
+    <div class="wrap">
+      <div class="sec-head">
+        <span class="ftag">Deployment Options</span>
+        <h2 style="margin-top:16px">Deploy where you control the infrastructure.</h2>
+      </div>
+      <div class="grid3">
+        <div class="feat-card">
+          <span class="ic" aria-hidden="true">
+            <Lock strokeWidth={1.8} />
+          </span>
+          <h3>On-Premises</h3>
+          <p>Deploy Integrate on your own servers with complete network isolation. Ideal for regulated industries and data residency requirements.</p>
+        </div>
+        <div class="feat-card">
+          <span class="ic" aria-hidden="true">
+            <Database strokeWidth={1.8} />
+          </span>
+          <h3>Self-Hosted (Cloud)</h3>
+          <p>Run on AWS, GCP, or Azure in your own cloud account. Full control over infrastructure, scaling, and data sovereignty.</p>
+        </div>
+        <div class="feat-card">
+          <span class="ic" aria-hidden="true">
+            <GitBranch strokeWidth={1.8} />
+          </span>
+          <h3>Hybrid</h3>
+          <p>Combine on-prem collection nodes with cloud coordination. Maximize security without sacrificing operational flexibility.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Integrations Grid -->
+  <section class="sec soft">
+    <div class="wrap">
+      <div class="sec-head">
+        <span class="ftag">Integrations</span>
+        <h2 style="margin-top:16px">Connect to the tools you already use.</h2>
+      </div>
+      <div class="grid3">
+        <!-- Billing -->
+        <div class="feat-card">
+          <h3 style="margin-top:0">Billing Systems</h3>
+          <ul style="list-style:none;padding:0;margin:0;font-size:14px;line-height:1.8;color:var(--ink2)">
+            <li>Zuora</li>
+            <li>Stripe</li>
+            <li>Chargify</li>
+            <li>Recurly</li>
+          </ul>
+        </div>
+        <!-- Data Warehouses -->
+        <div class="feat-card">
+          <h3 style="margin-top:0">Data Warehouses</h3>
+          <ul style="list-style:none;padding:0;margin:0;font-size:14px;line-height:1.8;color:var(--ink2)">
+            <li>Snowflake</li>
+            <li>BigQuery</li>
+            <li>Redshift</li>
+            <li>Databricks</li>
+          </ul>
+        </div>
+        <!-- Security & Logs -->
+        <div class="feat-card">
+          <h3 style="margin-top:0">Security & Logs</h3>
+          <ul style="list-style:none;padding:0;margin:0;font-size:14px;line-height:1.8;color:var(--ink2)">
+            <li>CloudTrail</li>
+            <li>Okta</li>
+            <li>Datadog</li>
+            <li>Splunk</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA Band -->
+  <section class="sec ctaband">
+    <div class="wrap">
+      <div class="box">
+        <h2>Ready to take control of your data integration?</h2>
+        <p>Deploy Plokr Integrate in your infrastructure in under 30 minutes. No vendor lock-in, complete compliance.</p>
+        <div class="cta">
+          <a class="btn btn-primary btn-lg" href={PLOKR_APP} data-auth="signup" style="background:#fff;color:#0C1A2B">{CTA_INTEGRATE}</a>
+          <a class="btn btn-line btn-lg" href="/contact">Schedule demo</a>
+        </div>
+      </div>
+    </div>
+  </section>
+</Layout>

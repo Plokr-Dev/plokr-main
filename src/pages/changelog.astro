@@ -1,0 +1,67 @@
+---
+import Layout from '../layouts/Layout.astro';
+
+const entries = [
+  { date: 'Apr 22, 2026', version: 'v2.8', items: [
+    { type: 'new', text: 'Delivery heatmaps — visualize issues resolved per day across 18 weeks, per squad.' },
+    { type: 'imp', text: 'Velocity charts now show an at-risk marker when scope grows mid-sprint.' },
+    { type: 'fix', text: 'Resolved a sync delay for Jira projects with 5,000+ issues.' },
+  ]},
+  { date: 'Apr 8, 2026', version: 'v2.7', items: [
+    { type: 'new', text: 'Trello boards can now be monitored alongside Jira.' },
+    { type: 'new', text: 'Outbound webhooks for alert delivery, with per-policy routing.' },
+    { type: 'imp', text: 'Dependency scans now surface safe-upgrade targets inline.' },
+  ]},
+  { date: 'Mar 24, 2026', version: 'v2.6', items: [
+    { type: 'new', text: 'One-click PR drafts for dependency upgrades on GitHub and GitLab.' },
+    { type: 'imp', text: 'Severity ranking now factors in exploit maturity.' },
+    { type: 'fix', text: 'Fixed duplicate alerts when a CVE affected multiple manifests.' },
+  ]},
+  { date: 'Mar 6, 2026', version: 'v2.5', items: [
+    { type: 'new', text: 'Cross-project rollups for leadership overviews.' },
+    { type: 'imp', text: 'Faster initial scan — first results in under 60 seconds for most repos.' },
+    { type: 'fix', text: 'Corrected timezone handling in weekly email digests.' },
+  ]},
+  { date: 'Feb 18, 2026', version: 'v2.4', items: [
+    { type: 'new', text: 'GitLab integration (SaaS and self-managed).' },
+    { type: 'imp', text: 'Granular, per-repo revocation in connection settings.' },
+  ]},
+];
+
+const labelText: Record<string, string> = { new: 'New', imp: 'Improved', fix: 'Fixed' };
+---
+
+<Layout
+  title="Changelog | Plokr"
+  description="What's new in Plokr — every meaningful change, shipped continuously."
+  current="changelog"
+>
+  <header class="phero">
+    <div class="wrap">
+      <span class="eyebrow">Changelog</span>
+      <h1>What's new in Plokr.</h1>
+      <p class="lede">Every meaningful change, shipped continuously. Subscribe via the webhook or check back here.</p>
+    </div>
+  </header>
+
+  <section class="sec">
+    <div class="clog">
+      {entries.map(e => (
+        <div class="clentry">
+          <div class="clmeta">
+            <div class="date">{e.date}</div>
+            <span class="ver">{e.version}</span>
+          </div>
+          <div class="clbody">
+            {e.items.map(item => (
+              <div class="ci">
+                <span class={`lab ${item.type}`}>{labelText[item.type]}</span>
+                <span>{item.text}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+      ))}
+    </div>
+  </section>
+</Layout>

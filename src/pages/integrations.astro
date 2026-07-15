@@ -1,0 +1,108 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { PLOKR_APP } from '../lib/constants';
+
+const integ = [
+  { bg: '#2A6FDB', letter: 'J', name: 'Jira',      type: 'Issue tracking',        feats: ['Boards, sprints & epics','Issues, status & assignees','Real-time sync'] },
+  { bg: '#1F2328', letter: 'G', name: 'GitHub',    type: 'Source & dependencies', feats: ['Repos & branches','Manifests & lockfiles','Public and private'] },
+  { bg: '#2563EB', letter: 'B', name: 'Bitbucket', type: 'Source & dependencies', feats: ['Repos & branches','Manifests & lockfiles','Cloud & Server'] },
+  { bg: '#E2432A', letter: 'L', name: 'GitLab',    type: 'Source & dependencies', feats: ['Projects & repos','Manifests & lockfiles','Self-managed or SaaS'] },
+  { bg: '#0B66C3', letter: 'T', name: 'Trello',    type: 'Boards',                feats: ['Cards, lists & labels','Members & due dates','Workspace-wide'] },
+];
+---
+
+<Layout
+  title="Integrations | Plokr"
+  description="Connect Jira, GitHub, Bitbucket, GitLab, and Trello with read-only OAuth. Authorize in a click, scope exactly what it can read, and revoke anytime."
+  current="integrations"
+>
+  <header class="phero">
+    <div class="wrap" style="text-align:center">
+      <span class="eyebrow" style="margin:0 auto">Integrations</span>
+      <h1 style="margin:20px auto 0">Connect the tools your team already runs on.</h1>
+      <p class="lede" style="margin:22px auto 0">Plokr links to your issue trackers and code hosts with read-only OAuth. Authorize in a click, scope exactly what it can read, and revoke anytime.</p>
+      <div class="cta" style="justify-content:center">
+        <a class="btn btn-primary btn-lg" href={PLOKR_APP} data-auth="signup">Start free trial</a>
+        <a class="btn btn-line btn-lg" href="/docs">Read setup docs</a>
+      </div>
+    </div>
+  </header>
+
+  <section class="sec">
+    <div class="wrap">
+      <div class="grid3" style="grid-template-columns:repeat(3,1fr)">
+        {integ.map(it => (
+          <article class="intcard">
+            <div class="top">
+              <span class="sq" style={`background:${it.bg}`} aria-hidden="true">{it.letter}</span>
+              <div>
+                <div class="nm">{it.name}</div>
+                <div class="ty">{it.type}</div>
+              </div>
+            </div>
+            <ul>
+              {it.feats.map(f => <li>{f}</li>)}
+            </ul>
+            <div class="row">
+              <a class="btn btn-line" href={PLOKR_APP} data-auth="signup" style="flex:1">Connect</a>
+              <span class="ro">READ-ONLY</span>
+            </div>
+          </article>
+        ))}
+
+        <!-- Placeholder card -->
+        <div class="intcard" style="justify-content:center;align-items:center;text-align:center;border-style:dashed;background:transparent">
+          <div class="nm" style="color:var(--muted)">More on the way</div>
+          <p style="font-size:13.5px;color:var(--muted);margin:10px 0 16px">Azure DevOps, Linear &amp; more are in progress.</p>
+          <a class="btn btn-line" href="/contact">Request an integration</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec soft">
+    <div class="wrap">
+      <div class="sec-head">
+        <span class="ftag">How connections work</span>
+        <h2 style="margin-top:16px">Authorize-first, read-only, revocable.</h2>
+      </div>
+      <div class="steps">
+        {[
+          ['01','Authorize with OAuth','Click connect and approve the exact scopes you want. Plokr can see nothing until you do.'],
+          ['02','Read-only sync','Plokr reads boards and manifests on a schedule and on push — it never writes to your tools.'],
+          ['03','Revoke anytime','Disconnect any integration instantly from settings; access and stored tokens are removed.'],
+        ].map(([n, t, d]) => (
+          <div class="step"><span class="n">{n}</span><h3>{t}</h3><p>{d}</p></div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="sec">
+    <div class="wrap">
+      <div class="sec-head">
+        <span class="ftag">Notifications</span>
+        <h2 style="margin-top:16px">Get alerts where you work.</h2>
+        <p>Plokr pushes ranked alerts out so the right people hear about blockers and vulnerabilities first.</p>
+      </div>
+      <div class="notif">
+        <span class="n"><span class="d" style="background:#3B82F6" aria-hidden="true"></span>Email digests</span>
+        <span class="n"><span class="d" style="background:#10B981" aria-hidden="true"></span>Outbound webhooks</span>
+        <span class="n"><span class="d" style="background:#62748B" aria-hidden="true"></span>In-app inbox</span>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec ctaband">
+    <div class="wrap">
+      <div class="box">
+        <h2>Connect your first tool today.</h2>
+        <p>It takes under five minutes and your first insights land immediately.</p>
+        <div class="cta">
+          <a class="btn btn-primary btn-lg" href={PLOKR_APP} data-auth="signup" style="background:#fff;color:#0C1A2B">Start free trial</a>
+          <a class="btn btn-line btn-lg" href="/security">How we handle data</a>
+        </div>
+      </div>
+    </div>
+  </section>
+</Layout>

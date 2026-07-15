@@ -1,0 +1,116 @@
+---
+import Layout from '../layouts/Layout.astro';
+import PricingTiers from '../components/PricingTiers';
+import FAQAccordion from '../components/FAQAccordion';
+import { PLOKR_APP } from '../lib/constants';
+
+const groups = [
+  ['Monitoring', [
+    ['Jira & Trello boards', '1 project', 'Unlimited', 'Unlimited'],
+    ['Repos monitored', '3', '25', 'Unlimited'],
+    ['Dependency scan frequency', 'Daily', 'Real-time', 'Real-time'],
+    ['Stale & blocked detection', 'no', 'yes', 'yes'],
+    ['Trend history', '7 days', '90 days', 'Unlimited'],
+  ]],
+  ['Alerts', [
+    ['Email digests', 'yes', 'yes', 'yes'],
+    ['Outbound webhooks', 'no', 'yes', 'yes'],
+    ['Custom alert policies', 'no', 'yes', 'yes'],
+  ]],
+  ['Security & admin', [
+    ['SSO / SAML & SCIM', 'no', 'no', 'yes'],
+    ['Audit logs', 'no', 'no', 'yes'],
+    ['Role-based access', 'no', 'Basic', 'Advanced'],
+    ['SOC 2 report & DPA', 'no', 'no', 'yes'],
+  ]],
+  ['Support', [
+    ['Community support', 'yes', 'yes', 'yes'],
+    ['Priority support', 'no', 'yes', 'yes'],
+    ['Dedicated SLA & CSM', 'no', 'no', 'yes'],
+  ]],
+] as const;
+---
+
+<Layout
+  title="Pricing | Plokr"
+  description="Start free, upgrade when you grow. Per workspace, no per-seat surprises. Compare Starter, Team, and Enterprise plans."
+  current="pricing"
+>
+  <header class="phero pricing-hero">
+    <div class="wrap" style="text-align:center">
+      <span class="eyebrow" style="margin:0 auto">Pricing</span>
+      <h1 style="margin:20px auto 0">Pricing that scales with your team.</h1>
+      <p class="lede" style="margin:22px auto 0">Start free, upgrade when you grow. Per workspace, no per-seat surprises.</p>
+    </div>
+  </header>
+
+  <!-- Tier cards (React for billing toggle) -->
+  <section class="sec" style="padding-top:56px">
+    <div class="wrap">
+      <PricingTiers client:load />
+    </div>
+  </section>
+
+  <!-- Comparison table (static HTML — great for SEO) -->
+  <section class="sec soft">
+    <div class="wrap">
+      <div class="sec-head"><h2>Compare every feature.</h2></div>
+      <table class="ctable">
+        <thead>
+          <tr>
+            <th style="width:40%">Feature</th>
+            <th class="c">Starter</th>
+            <th class="c">Team</th>
+            <th class="c">Enterprise</th>
+          </tr>
+        </thead>
+        <tbody>
+          {groups.map(([groupName, rows]) => (
+            <>
+              <tr class="grp"><td colspan="4">{groupName}</td></tr>
+              {rows.map(([feature, starter, team, enterprise]) => (
+                <tr>
+                  <td>{feature}</td>
+                  <td class="c">
+                    {starter === 'yes' ? <span class="yes">✓</span> : starter === 'no' ? <span class="no">—</span> : starter}
+                  </td>
+                  <td class="c">
+                    {team === 'yes' ? <span class="yes">✓</span> : team === 'no' ? <span class="no">—</span> : team}
+                  </td>
+                  <td class="c">
+                    {enterprise === 'yes' ? <span class="yes">✓</span> : enterprise === 'no' ? <span class="no">—</span> : enterprise}
+                  </td>
+                </tr>
+              ))}
+            </>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- FAQ (React accordion) -->
+  <section class="sec">
+    <div class="wrap">
+      <div class="sec-head">
+        <span class="ftag">FAQ</span>
+        <h2 style="margin-top:16px">Questions, answered.</h2>
+      </div>
+      <FAQAccordion client:load />
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="sec ctaband" style="padding-top:0">
+    <div class="wrap">
+      <div class="box">
+        <h2>Start free. Upgrade when you're ready.</h2>
+        <p>No credit card to begin, and your data stays read-only from the first connection.</p>
+        <div class="cta">
+          <a class="btn btn-primary btn-lg" href={PLOKR_APP} data-auth="signup" style="background:#fff;color:#0C1A2B">Start free trial</a>
+          <a class="btn btn-line btn-lg" href="/contact">Talk to sales</a>
+        </div>
+      </div>
+    </div>
+  </section>
+</Layout>

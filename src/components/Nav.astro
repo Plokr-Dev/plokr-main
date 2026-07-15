@@ -1,0 +1,147 @@
+---
+// TODO(T4-06): re-import Columns3 / Network / ShieldCheck when the hidden
+// per-feature dropdown items return.
+import { ChevronDown, FileText, SquarePen, Tag, Mail, Zap, Plug } from 'lucide-react';
+import { PLOKR_APP } from '../lib/constants';
+
+const { current = '' } = Astro.props;
+
+// Determine current product context from URL
+const urlPath = new URL(Astro.request.url).pathname;
+const isCore = urlPath.startsWith('/core/');
+const isIntegrate = urlPath.startsWith('/integrate/');
+---
+
+<nav class="nav" aria-label="Main navigation">
+  <div class="wrap">
+    <a class="logo" href="/" aria-label="Plokr home">
+      <span class="plokr-logo">plokr<i class="nub" aria-hidden="true"></i></span>
+    </a>
+
+    <div class="navlinks" role="menubar">
+      <!-- Product Switcher dropdown -->
+      <div class="dd product-switcher" role="none">
+        <button class="ddtrigger" aria-haspopup="true" aria-expanded="false" role="menuitem">
+          Products
+          <ChevronDown className="caret" strokeWidth={1.8} aria-hidden="true" />
+        </button>
+        <div class="ddmenu" role="menu">
+          <!-- Core Features -->
+          <div class="dd-section">
+            <div class="dd-section-header">
+              <span class="di"><Zap strokeWidth={1.8} /></span>
+              <span><b>Core Features</b></span>
+            </div>
+            <!-- TODO(T4-06): hidden for launch — sub-pages /core/jira-monitoring,
+                 /core/dependency-checker and /core/security don't exist yet.
+                 Re-add the per-feature items once those .astro pages are created. -->
+            <a class={`dditem ${isCore ? 'active' : ''}`} href="/core/" role="menuitem">
+              <span class="di" aria-hidden="true">
+                <Zap strokeWidth={1.8} />
+              </span>
+              <span><b>Plokr Core overview</b><span>Jira monitoring, dependency health &amp; security</span></span>
+            </a>
+          </div>
+
+          <!-- Integrate Features -->
+          <div class="dd-section">
+            <div class="dd-section-header">
+              <span class="di"><Plug strokeWidth={1.8} /></span>
+              <span><b>Integrate Features</b></span>
+            </div>
+            <!-- TODO(T4-06): hidden for launch — sub-pages /integrate/webhooks,
+                 /integrate/api and /integrate/custom-workflows don't exist yet.
+                 Re-add the per-feature items once those .astro pages are created. -->
+            <a class={`dditem ${isIntegrate ? 'active' : ''}`} href="/integrate/" role="menuitem">
+              <span class="di" aria-hidden="true">
+                <Plug strokeWidth={1.8} />
+              </span>
+              <span><b>Plokr Integrate overview</b><span>Webhooks, API &amp; custom workflows</span></span>
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <a href="/integrations" class={current === 'integrations' ? 'on' : ''} role="menuitem">Integrations</a>
+      <a href="/pricing"      class={current === 'pricing'      ? 'on' : ''} role="menuitem">Pricing</a>
+      <a href="/docs"         class={current === 'docs'         ? 'on' : ''} role="menuitem">Docs</a>
+
+      <!-- Company dropdown -->
+      <div class="dd" role="none">
+        <button class="ddtrigger" aria-haspopup="true" aria-expanded="false" role="menuitem">
+          Company
+          <ChevronDown className="caret" strokeWidth={1.8} aria-hidden="true" />
+        </button>
+        <div class="ddmenu" role="menu">
+          <a class="dditem" href="/about" role="menuitem">
+            <span class="di" aria-hidden="true">
+              <FileText strokeWidth={1.8} />
+            </span>
+            <span><b>About</b><span>Who we are and why we built Plokr</span></span>
+          </a>
+          <a class="dditem" href="/blog" role="menuitem">
+            <span class="di" aria-hidden="true">
+              <SquarePen strokeWidth={1.8} />
+            </span>
+            <span><b>Blog</b><span>Engineering &amp; product writing</span></span>
+          </a>
+          <a class="dditem" href="/changelog" role="menuitem">
+            <span class="di" aria-hidden="true">
+              <Tag strokeWidth={1.8} />
+            </span>
+            <span><b>Changelog</b><span>What's new in Plokr</span></span>
+          </a>
+          <a class="dditem" href="/contact" role="menuitem">
+            <span class="di" aria-hidden="true">
+              <Mail strokeWidth={1.8} />
+            </span>
+            <span><b>Contact</b><span>Talk to us or book a demo</span></span>
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <div class="navright">
+      <a class="login" href={PLOKR_APP} data-auth="login">Log in</a>
+      <a class="btn btn-primary" href={PLOKR_APP} data-auth="signup">Start free trial</a>
+    </div>
+  </div>
+</nav>
+
+<script>
+  // Dropdown toggle: click to open/close, close on outside click, close on Escape
+  const dds = document.querySelectorAll<HTMLElement>('.nav .dd');
+
+  dds.forEach(dd => {
+    const trigger = dd.querySelector<HTMLButtonElement>('.ddtrigger');
+    trigger?.addEventListener('click', () => {
+      const isOpen = dd.classList.contains('open');
+      dds.forEach(d => {
+        d.classList.remove('open');
+        d.querySelector('.ddtrigger')?.setAttribute('aria-expanded', 'false');
+      });
+      if (!isOpen) {
+        dd.classList.add('open');
+        trigger.setAttribute('aria-expanded', 'true');
+      }
+    });
+  });
+
+  document.addEventListener('click', (e: Event) => {
+    if (!(e.target as HTMLElement).closest('.nav .dd')) {
+      dds.forEach(d => {
+        d.classList.remove('open');
+        d.querySelector('.ddtrigger')?.setAttribute('aria-expanded', 'false');
+      });
+    }
+  });
+
+  document.addEventListener('keydown', (e: KeyboardEvent) => {
+    if (e.key === 'Escape') {
+      dds.forEach(d => {
+        d.classList.remove('open');
+        d.querySelector('.ddtrigger')?.setAttribute('aria-expanded', 'false');
+      });
+    }
+  });
+</script>

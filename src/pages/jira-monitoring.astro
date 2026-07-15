@@ -1,0 +1,165 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { PLOKR_APP } from '../lib/constants';
+import { LayoutGrid } from 'lucide-react';
+
+const cols = [
+  { title: 'To Do',       status: 'todo',  dot: '#7C3AED', cards: [['PAY-301','Add 3DS fallback flow','SA'], ['PAY-340','Webhook signature rotation','ML']] },
+  { title: 'In Progress', status: 'prog',  dot: '#3B82F6', cards: [['PAY-318','Reconcile Stripe retries','ML'], ['PAY-310','Ledger → decimal','JD']] },
+  { title: 'Blocked',     status: 'block', dot: '#EF4444', cards: [['PAY-322','Refund idempotency keys','RK']] },
+  { title: 'Done',        status: 'ok',    dot: '#10B981', cards: [['PAY-298','Payout audit log','TM'], ['PAY-289','Rate-limit refunds','ML']] },
+];
+
+const feats = [
+  ['Stale & blocked detection', 'Plokr flags issues sitting untouched past your threshold and surfaces blockers the moment a dependency link goes red.'],
+  ['Sprint health & burndown', 'Live burndown, scope-creep tracking, and a single health score per sprint — without opening Jira.'],
+  ['Workload balance', 'See load distribution across assignees, squads, and epics so no one silently becomes a bottleneck.'],
+  ['Slippage trends', 'Historical velocity and cycle-time trends predict which sprints are about to slip, weeks ahead.'],
+  ['Cross-project rollups', 'Roll up status across many projects and boards into one executive overview for leadership.'],
+  ['Jira + Trello', 'Monitor Jira boards and Trello boards side by side in one consistent view.'],
+];
+---
+
+<Layout
+  title="Jira Monitoring | Plokr"
+  description="Real-time command of every board. Live burndown, blocked issues, at-risk sprint detection, and workload balance across all your Jira and Trello projects."
+  current="jira"
+>
+  <header class="phero dark" style="padding-bottom:64px">
+    <div class="wrap" style="display:grid;grid-template-columns:1fr 1.02fr;gap:54px;align-items:center">
+      <div>
+        <nav class="crumbs" aria-label="Breadcrumb">
+          <a href="/">Home</a><span aria-hidden="true">/</span>
+          <span>Product</span><span aria-hidden="true">/</span>
+          <span style="color:#fff">Jira Monitoring</span>
+        </nav>
+        <span class="eyebrow">Jira Monitoring</span>
+        <h1>Real-time command of every <em>board</em>.</h1>
+        <p class="lede">Plokr syncs your Jira and Trello boards continuously and turns raw tickets into signal — what's moving, what's stuck, and where a sprint is about to slip.</p>
+        <div class="cta">
+          <a class="btn btn-primary btn-lg" href={PLOKR_APP} data-auth="signup">Start free trial</a>
+          <a class="btn btn-line btn-lg" href="/contact" style="background:rgba(255,255,255,.06);border-color:rgba(255,255,255,.22);color:#fff">Book a demo</a>
+        </div>
+      </div>
+
+      <div class="card" style="background:var(--navy2);border-color:rgba(255,255,255,.1)" aria-label="Kanban board preview">
+        <div class="ch" style="border-color:rgba(255,255,255,.08)">
+          <span class="t" style="color:#fff">Sprint 24 · Payments squad</span>
+          <span class="chip" style="color:rgba(255,255,255,.5);border-color:rgba(255,255,255,.14)">live</span>
+        </div>
+        <div style="padding:14px">
+          <div class="kanban">
+            {cols.map(col => (
+              <div class="kcol">
+                <div class="kh">
+                  <span>{col.title}</span>
+                  <span class="ct">{col.cards.length}</span>
+                </div>
+                {col.cards.map(([id, title, initials]) => (
+                  <div class="kcard">
+                    <div class="kk">{id}</div>
+                    <div class="kt">{title}</div>
+                    <div class="kf">
+                      <span class="kdot" style={`background:${col.dot}`}></span>
+                      <span class="ava" style={`background:${col.dot}`}>{initials}</span>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Metrics bar -->
+  <section class="sec alt tight">
+    <div class="wrap">
+      <div class="metricrow">
+        {[['62%','Avg sprint progress'],['3.1d','Mean time-to-unblock'],['-40%','Stale issues after 30 days'],['100%','Boards in one view']].map(([v, label]) => (
+          <div class="metric">
+            <div class="mv">{v}</div>
+            <div class="ml">{label}</div>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- Capabilities grid -->
+  <section class="sec">
+    <div class="wrap">
+      <div class="sec-head">
+        <span class="ftag">Capabilities</span>
+        <h2 style="margin-top:16px">Everything you need to keep delivery on track.</h2>
+      </div>
+      <div class="grid3">
+        {feats.map(([title, desc]) => (
+          <div class="feat-card">
+            <span class="ic" aria-hidden="true">
+              <LayoutGrid strokeWidth={1.8} />
+            </span>
+            <h3>{title}</h3><p>{desc}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- Slippage section -->
+  <section class="sec soft">
+    <div class="wrap">
+      <div class="frow">
+        <div>
+          <span class="ftag">Stay ahead of slippage</span>
+          <h2>Know which sprints are at risk — before standup.</h2>
+          <p class="lead">Plokr learns your team's velocity and cycle time, then flags the sprints trending toward a miss. Leaders get a heads-up while there's still time to act.</p>
+          <ul class="checklist">
+            {['Predictive at-risk sprint flags','Scope-creep and carry-over tracking','Per-squad velocity and cycle-time trends','Weekly digest to inbox or webhook'].map(t => (
+              <li><span class="tick" aria-hidden="true">✓</span>{t}</li>
+            ))}
+          </ul>
+        </div>
+        <div class="card">
+          <div class="ch"><span class="t">Velocity & risk · last 8 sprints</span><span class="chip">Payments</span></div>
+          <div style="padding:22px 20px">
+            <svg viewBox="0 0 360 150" width="100%" height="150" preserveAspectRatio="none" aria-hidden="true">
+              <defs>
+                <linearGradient id="jv" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0" stop-color="#3B82F6" stop-opacity="0.28"/>
+                  <stop offset="1" stop-color="#3B82F6" stop-opacity="0"/>
+                </linearGradient>
+              </defs>
+              <line x1="0" y1="30" x2="360" y2="30" stroke="#E4EAF1" stroke-width="1"/>
+              <line x1="0" y1="60" x2="360" y2="60" stroke="#E4EAF1" stroke-width="1"/>
+              <line x1="0" y1="90" x2="360" y2="90" stroke="#E4EAF1" stroke-width="1"/>
+              <line x1="0" y1="120" x2="360" y2="120" stroke="#E4EAF1" stroke-width="1"/>
+              <polygon points="0,110 51,96 102,104 153,72 204,80 255,52 306,60 360,34 360,150 0,150" fill="url(#jv)"/>
+              <polyline points="0,110 51,96 102,104 153,72 204,80 255,52 306,60 360,34" fill="none" stroke="#2563EB" stroke-width="2.5" stroke-linejoin="round"/>
+              <circle cx="255" cy="52" r="4" fill="#EF4444"/>
+            </svg>
+            <div style="display:flex;align-items:center;gap:8px;margin-top:14px;font-size:13px;color:var(--muted)">
+              <span class="pill block">at risk</span>
+              Sprint 22 flagged — scope grew 18% mid-sprint.
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="sec ctaband">
+    <div class="wrap">
+      <div class="box">
+        <h2>Put your boards on autopilot.</h2>
+        <p>Connect Jira in minutes and let Plokr watch every sprint for you.</p>
+        <div class="cta">
+          <a class="btn btn-primary btn-lg" href={PLOKR_APP} data-auth="signup" style="background:#fff;color:#0C1A2B">Start free trial</a>
+          <a class="btn btn-line btn-lg" href="/pricing">See pricing</a>
+        </div>
+      </div>
+    </div>
+  </section>
+</Layout>

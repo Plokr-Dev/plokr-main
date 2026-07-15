@@ -1,0 +1,16 @@
+---
+import Layout from '../layouts/Layout.astro';
+---
+<Layout title="Page not found | Plokr" description="This page doesn't exist." noIndex={true}>
+  <section class="sec" style="min-height:60vh;display:flex;align-items:center">
+    <div class="wrap" style="text-align:center">
+      <span class="eyebrow">404</span>
+      <h1 style="font-size:48px;margin-top:12px">Page not found</h1>
+      <p class="lede" style="margin-top:16px;max-width:420px;margin-inline:auto">That URL doesn't exist. It may have moved, or the link might be wrong.</p>
+      <div style="margin-top:32px;display:flex;gap:12px;justify-content:center;flex-wrap:wrap">
+        <a class="btn btn-primary" href="/">Go home</a>
+        <a class="btn btn-outline" href="/docs">Browse docs</a>
+      </div>
+    </div>
+  </section>
+</Layout>

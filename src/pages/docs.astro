@@ -1,0 +1,82 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { PLOKR_APP } from '../lib/constants';
+import { Zap, LayoutGrid, Network, Bell, Users, Code, Search } from 'lucide-react';
+
+const nav = [
+  { group: 'Get started',   links: [{ label:'Introduction', active: true }, { label:'Quickstart' }, { label:'Core concepts' }] },
+  { group: 'Connect tools', links: [{ label:'Jira & Trello' }, { label:'GitHub' }, { label:'Bitbucket' }, { label:'GitLab' }] },
+  { group: 'Monitoring',    links: [{ label:'Sprint health' }, { label:'Stale & blocked' }, { label:'Dependency scans' }, { label:'Alerts & webhooks' }] },
+  { group: 'Platform',      links: [{ label:'Roles & access' }, { label:'API reference' }, { label:'Security' }] },
+];
+
+const cards = [
+  { icon: Zap, title: 'Quickstart', desc: 'Connect your first tool and see insights in under five minutes.' },
+  { icon: LayoutGrid, title: 'Connect Jira & Trello', desc: 'Authorize boards, choose projects, and configure sync frequency.' },
+  { icon: Network, title: 'Dependency scanning', desc: 'How scans run, what\'s read, and how findings are ranked.' },
+  { icon: Bell, title: 'Alerts & webhooks', desc: 'Set policies and route alerts to email and outbound webhooks.' },
+  { icon: Users, title: 'Roles & access', desc: 'Invite teammates and manage role-based permissions.' },
+  { icon: Code, title: 'API reference', desc: 'Authenticate and pull your Plokr data programmatically.' },
+];
+---
+
+<Layout
+  title="Documentation | Plokr"
+  description="Everything you need to run Plokr — guides, concepts, and an API reference from your first connection to advanced policies."
+  current="docs"
+>
+  <header class="phero">
+    <div class="wrap">
+      <span class="eyebrow">Documentation</span>
+      <h1>Everything you need to run Plokr.</h1>
+      <p class="lede">Guides, concepts, and an API reference — from your first connection to advanced policies.</p>
+      <div class="docsearch" role="search">
+        <Search strokeWidth={2} aria-hidden="true" />
+        <input type="search" placeholder="Search the docs…" aria-label="Search documentation" />
+        <span class="kbd" aria-label="Keyboard shortcut: Command K">⌘K</span>
+      </div>
+    </div>
+  </header>
+
+  <section class="sec">
+    <div class="wrap">
+      <div class="docs">
+        <aside class="docnav" aria-label="Documentation navigation">
+          {nav.map(g => (
+            <div>
+              <div class="grp">{g.group}</div>
+              {g.links.map(l => (
+                <a href="#" class={l.active ? 'on' : ''}>{l.label}</a>
+              ))}
+            </div>
+          ))}
+        </aside>
+        <div>
+          <h2 style="font-size:24px;margin-bottom:6px">Popular topics</h2>
+          <p style="color:var(--muted);font-size:15px;margin-bottom:26px">Jump into the most-read guides, or browse the sidebar.</p>
+          <div class="grid3">
+            {cards.map((c) => {
+              const Icon = c.icon;
+              return (
+                <a class="doccard" href="#">
+                  <span class="di" aria-hidden="true">
+                    <Icon strokeWidth={1.8} />
+                  </span>
+                  <h3>{c.title}</h3>
+                  <p>{c.desc}</p>
+                </a>
+              );
+            })}
+          </div>
+          <div class="card" style="margin-top:26px;display:flex;align-items:center;gap:20px;padding:24px 26px">
+            <div style="flex:1">
+              <h3 style="font-family:'Archivo';font-size:18px;margin-bottom:6px">Prefer to learn by doing?</h3>
+              <p style="color:var(--muted);font-size:14px">Spin up a workspace and follow the in-app quickstart checklist.</p>
+            </div>
+            <a class="btn btn-primary" href={PLOKR_APP}>Open the app</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</Layout>

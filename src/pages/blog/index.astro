@@ -1,0 +1,68 @@
+---
+import Layout from '../../layouts/Layout.astro';
+
+const featured = {
+  cat: 'Engineering',
+  title: 'Why dependency risk is a delivery problem, not just a security one',
+  excerpt: 'Outdated and vulnerable packages don\'t just create CVEs — they quietly slow every team that depends on them. Here\'s how we think about ranking risk by impact.',
+  author: 'Maya Okonkwo',
+  date: 'Apr 18, 2026',
+  readTime: '6 min',
+  slug: 'why-dependency-risk',
+};
+
+const posts = [
+  { cat:'Product',     title:'Introducing delivery heatmaps',           excerpt:'See throughput patterns across squads at a glance — and spot the weeks that quietly slipped.', author:'Jordan Lee',   date:'Apr 9, 2026',  readTime:'4 min', slug:'delivery-heatmaps' },
+  { cat:'Engineering', title:'Reading Jira without slowing Jira down',  excerpt:'How Plokr syncs boards in real time using read-only APIs and incremental updates.',              author:'Sam Alvarez',  date:'Mar 28, 2026', readTime:'7 min', slug:'jira-sync' },
+  { cat:'Security',    title:'Authorize-first: our take on least privilege', excerpt:'Why we built Plokr to see nothing until you explicitly grant scoped, read-only access.',     author:'Riya Kapoor',  date:'Mar 14, 2026', readTime:'5 min', slug:'authorize-first' },
+  { cat:'Product',     title:'Ranking alerts so the right one wins',    excerpt:'Forty findings help no one. A look at how we score severity by real exploitability.',             author:'Maya Okonkwo', date:'Feb 27, 2026', readTime:'5 min', slug:'ranking-alerts' },
+  { cat:'Culture',     title:'What we learned running 200 on-call rotations', excerpt:'Lessons from the trenches that shaped how Plokr surfaces blockers and stale work.',        author:'Jordan Lee',   date:'Feb 12, 2026', readTime:'8 min', slug:'oncall-lessons' },
+  { cat:'Engineering', title:'Trend models that predict a sprint miss', excerpt:'The lightweight forecasting behind Plokr\'s at-risk sprint flags.',                              author:'Sam Alvarez',  date:'Jan 30, 2026', readTime:'6 min', slug:'sprint-forecast' },
+];
+---
+
+<Layout
+  title="Blog | Plokr"
+  description="Engineering, security, and product writing from the Plokr team. Notes on observability, dependency risk, and building calm tools for teams that ship."
+  current="blog"
+>
+  <header class="phero">
+    <div class="wrap">
+      <span class="eyebrow">Blog</span>
+      <h1>Writing from the Plokr team.</h1>
+      <p class="lede">Notes on engineering observability, dependency risk, and building calm tools for teams that ship.</p>
+    </div>
+  </header>
+
+  <section class="sec">
+    <div class="wrap">
+      <!-- Featured post -->
+      <a class="feat-post" href={`/blog/${featured.slug}`} aria-label={`Featured: ${featured.title}`}>
+        <div class="thumb" role="img" aria-hidden="true"></div>
+        <div class="pc">
+          <span class="cat">{featured.cat}</span>
+          <h2>{featured.title}</h2>
+          <p>{featured.excerpt}</p>
+          <div class="meta" style="margin-top:18px;font-size:12.5px;color:var(--muted)">
+            {featured.author} · {featured.date} · {featured.readTime} read
+          </div>
+        </div>
+      </a>
+
+      <!-- Post grid -->
+      <div class="bloglist">
+        {posts.map(p => (
+          <a class="post" href={`/blog/${p.slug}`}>
+            <div class="thumb" role="img" aria-hidden="true"></div>
+            <div class="pc">
+              <span class="cat">{p.cat}</span>
+              <h3>{p.title}</h3>
+              <p>{p.excerpt}</p>
+              <div class="meta">{p.author} · {p.date} · {p.readTime}</div>
+            </div>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+</Layout>
