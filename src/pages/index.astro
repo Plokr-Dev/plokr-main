@@ -65,14 +65,14 @@ const bars = [['M',70,52],['T',55,60],['W',80,46],['T',62,72],['F',48,58],['S',2
             <div class="lab">Sprint progress</div>
             <div class="num">62%<small>+8%</small></div>
             <div class="spark" aria-hidden="true">
-              {sparkBlue.map((h, i) => <i key={i} style={`height:${h}%`}></i>)}
+              {sparkBlue.map((h) => <i style={`height:${h}%`}></i>)}
             </div>
           </div>
           <div class="kpi">
             <div class="lab">Dependency health</div>
             <div class="num">91%<small>good</small></div>
             <div class="spark" aria-hidden="true">
-              {sparkGreen.map((h, i) => <i key={i} style={`height:${h}%;background:#10B981`}></i>)}
+              {sparkGreen.map((h) => <i style={`height:${h}%;background:#10B981`}></i>)}
             </div>
           </div>
           <div class="kpi">

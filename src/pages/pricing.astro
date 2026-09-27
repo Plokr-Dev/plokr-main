@@ -4,7 +4,8 @@ import PricingTiers from '../components/PricingTiers';
 import FAQAccordion from '../components/FAQAccordion';
 import { PLOKR_APP } from '../lib/constants';
 
-const groups = [
+type FeatureRow = [feature: string, starter: string, team: string, enterprise: string];
+const groups: [group: string, rows: FeatureRow[]][] = [
   ['Monitoring', [
     ['Jira & Trello boards', '1 project', 'Unlimited', 'Unlimited'],
     ['Repos monitored', '3', '25', 'Unlimited'],
