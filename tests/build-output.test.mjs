@@ -47,6 +47,20 @@ test('every inline <script> is allowed by a script-src sha256 hash', () => {
   assert.equal(missing.size, 0, `inline scripts not allowed by CSP (externalize them, or add the hash to public/_headers and its mirrors):\n${report}`);
 });
 
+test("inline styles are allowed by style-src (only relevant without 'unsafe-inline')", () => {
+  const sources = sourcesFor(csp, 'style-src');
+  if (sources.includes("'unsafe-inline'")) return;
+  const allowed = new Set(sources);
+  const offenders = [];
+  for (const { file, html } of pages) {
+    for (const m of html.matchAll(/<style\b[^>]*>([\s\S]*?)<\/style\s*>/gi)) {
+      if (!allowed.has(sha256Source(m[1]))) offenders.push(`${file}: <style> ${sha256Source(m[1])}`);
+    }
+    for (const m of html.matchAll(/<[a-z][^>]*\sstyle\s*=/gi)) offenders.push(`${file}: style attribute in ${m[0].slice(0, 60)}`);
+  }
+  assert.deepEqual(offenders, [], 'style-src has no unsafe-inline: move inline CSS into a stylesheet');
+});
+
 test('every external <script src> origin is allowed by script-src', () => {
   for (const { file, html } of pages) {
     for (const { attrs } of findTags(html, 'script')) {
