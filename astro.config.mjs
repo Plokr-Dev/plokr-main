@@ -1,21 +1,29 @@
 import { defineConfig } from 'astro/config';
 import react from '@astrojs/react';
 import sitemap from '@astrojs/sitemap';
-import cloudflare from '@astrojs/cloudflare';
 
 export default defineConfig({
   site: 'https://plokr.com',
-  // Static-by-default: every marketing page is prerendered to HTML at build time
-  // (free + fast + best SEO on Cloudflare Pages). The Cloudflare adapter makes the
-  // site SSR-capable so any page that must render on-demand can opt in with
-  // `export const prerender = false`.
+  // Fully static: every marketing page is prerendered to HTML at build time and
+  // Cloudflare Pages serves dist/ as plain files, with response headers taken
+  // from public/_headers (the single source of truth for security headers).
   //
-  // For "dynamic for SEO": repo-managed programmatic pages (per-integration,
-  // per-use-case landing pages) should use getStaticPaths so they stay static and
-  // free; reserve on-demand SSR (prerender = false) for content that must change
-  // without a rebuild (e.g. a headless CMS). With zero on-demand routes the build
-  // stays fully static and no Worker bundle is emitted.
+  // The @astrojs/cloudflare adapter was removed: with zero on-demand routes it
+  // only emitted an unused _worker.js/_routes.json, and the adapter versions
+  // that support a patched Astro split output into dist/client + dist/server
+  // and pull in wrangler. If a page ever needs on-demand SSR
+  // (`export const prerender = false`), re-add the adapter and move the Pages
+  // output directory to dist/client.
   output: 'static',
-  adapter: cloudflare(),
   integrations: [react(), sitemap()],
+  vite: {
+    build: {
+      // Never inline Vite assets or processed <script> bundles into HTML: every
+      // first-party script ships as an external /_astro/*.js file covered by
+      // script-src 'self'. Only Astro's fixed island-hydration runtime stays
+      // inline and is allowed by sha256 hash (see public/_headers).
+      assetsInlineLimit: 0,
+      sourcemap: false,
+    },
+  },
 });
