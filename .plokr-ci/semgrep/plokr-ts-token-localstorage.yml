@@ -1,0 +1,18 @@
+rules:
+  - id: plokr-ts-token-localstorage
+    message: >-
+      A token/secret is written to localStorage, where any XSS can read it.
+      Keep session tokens in HttpOnly, Secure, SameSite cookies (or in memory).
+    severity: ERROR
+    languages: [typescript, javascript]
+    metadata:
+      cwe: "CWE-922: Insecure Storage of Sensitive Information"
+      category: security
+      source: plokr-ci
+    patterns:
+      - pattern-either:
+          - pattern: localStorage.setItem($KEY, ...)
+          - pattern: window.localStorage.setItem($KEY, ...)
+      - metavariable-regex:
+          metavariable: $KEY
+          regex: (?i).*(token|jwt|auth|secret).*

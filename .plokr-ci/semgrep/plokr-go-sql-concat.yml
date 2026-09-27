@@ -1,0 +1,43 @@
+rules:
+  - id: plokr-go-sql-concat
+    message: >-
+      SQL text built with string concatenation, or with fmt.Sprintf using a
+      string-like verb (%s %v %q %x %T), is passed to Query/QueryRow/Exec.
+      Use $1..$n placeholders for values and pgx.Identifier{...}.Sanitize() for
+      identifiers. If the interpolated value is a compile-time constant, add
+      `// nosemgrep: plokr-go-sql-concat` with the reason.
+    severity: ERROR
+    languages: [go]
+    metadata:
+      cwe: "CWE-89: Improper Neutralization of Special Elements used in an SQL Command (SQL Injection)"
+      category: security
+      source: plokr-ci
+      precision: >-
+        Sprintf formats that only use %d (placeholder indexes such as "$%d") are
+        not flagged; they cannot carry SQL text. Multi-statement query builders
+        that append constant fragments to a variable are not flagged either,
+        because they are indistinguishable syntactically from safe code.
+    patterns:
+      - pattern-either:
+          - pattern: $DB.$METHOD($CTX, $A + $B, ...)
+          - patterns:
+              - pattern: $DB.$METHOD($CTX, fmt.Sprintf($FMT, ...), ...)
+              - metavariable-regex:
+                  metavariable: $FMT
+                  regex: (?s).*%[-+# 0-9.*]*[svqxXT].*
+          - patterns:
+              - pattern-either:
+                  - pattern-inside: |
+                      $Q := fmt.Sprintf($FMT, ...)
+                      ...
+                  - pattern-inside: |
+                      $Q = fmt.Sprintf($FMT, ...)
+                      ...
+              - metavariable-regex:
+                  metavariable: $FMT
+                  regex: (?s).*%[-+# 0-9.*]*[svqxXT].*
+              - pattern: $DB.$METHOD($CTX, $Q, ...)
+      - metavariable-regex:
+          metavariable: $METHOD
+          regex: ^(Query|QueryRow|Exec)$
+      - pattern-not: $DB.$METHOD($CTX, "...", ...)

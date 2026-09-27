@@ -1,0 +1,35 @@
+rules:
+  - id: plokr-go-ssrf-raw-http
+    message: >-
+      Outbound HTTP in a connector/provider/AI/git integration uses the default
+      client or a client without an explicit Transport. User-influenced URLs can
+      then reach internal services and cloud metadata (SSRF). Use
+      internal/netguard.Client() instead.
+    # WARNING while internal/netguard is being rolled out; flip to ERROR once migrated.
+    severity: WARNING
+    languages: [go]
+    metadata:
+      cwe: "CWE-918: Server-Side Request Forgery (SSRF)"
+      category: security
+      source: plokr-ci
+    paths:
+      include:
+        - "internal/connector*/**"
+        - "internal/connectorNodes/**"
+        - "internal/**/provider*/**"
+        - "internal/ai*/**"
+        - "internal/git*/**"
+    pattern-either:
+      - pattern: http.Get(...)
+      - pattern: http.Post(...)
+      - pattern: http.PostForm(...)
+      - pattern: http.Head(...)
+      - pattern: http.DefaultClient.$METHOD(...)
+      - pattern: new(http.Client)
+      - patterns:
+          - pattern: "&http.Client{...}"
+          - pattern-not: "&http.Client{..., Transport: $T, ...}"
+      - patterns:
+          - pattern: "http.Client{...}"
+          - pattern-not: "http.Client{..., Transport: $T, ...}"
+          - pattern-not-inside: "&http.Client{...}"

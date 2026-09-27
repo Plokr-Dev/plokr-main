@@ -1,0 +1,16 @@
+rules:
+  - id: plokr-ng-bypass-sanitizer
+    message: >-
+      DomSanitizer.bypassSecurityTrust* disables Angular's built-in XSS
+      protection for this value. Sanitize explicitly or render as text.
+    severity: ERROR
+    languages: [typescript, javascript]
+    metadata:
+      cwe: "CWE-79: Improper Neutralization of Input During Web Page Generation (Cross-site Scripting)"
+      category: security
+      source: plokr-ci
+    patterns:
+      - pattern: $X.$METHOD(...)
+      - metavariable-regex:
+          metavariable: $METHOD
+          regex: ^bypassSecurityTrust(Html|Script|Style|Url|ResourceUrl)$

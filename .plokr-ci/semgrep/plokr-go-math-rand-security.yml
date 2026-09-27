@@ -1,0 +1,14 @@
+rules:
+  - id: plokr-go-math-rand-security
+    message: >-
+      math/rand is imported in a file that handles tokens, secrets, passwords
+      or keys. math/rand is predictable; use crypto/rand for anything
+      security-relevant.
+    severity: WARNING
+    languages: [go]
+    metadata:
+      cwe: "CWE-338: Use of Cryptographically Weak Pseudo-Random Number Generator (PRNG)"
+      category: security
+      source: plokr-ci
+    # Matches the import only when the same file also mentions token/secret/password/key.
+    pattern-regex: '"math/rand(/v2)?"(?=[\s\S]*(?i:token|secret|password|key))'

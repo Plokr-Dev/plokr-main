@@ -1,0 +1,134 @@
+# Vendored by plokr-ci (profile: astro). DO NOT EDIT here; edit plokr-ci and
+# re-sync (.plokr-ci/check-drift.sh fails CI if this file is changed in-repo).
+#
+# Minutes budget (GitHub Free): security gates always run; the node job skips
+# docs-only PRs; the image job runs on push to main or when image inputs change.
+name: ci
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions: {}
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+jobs:
+  security:
+    permissions:
+      contents: read
+    uses: ./.github/workflows/_security-common.yml # zizmor: ignore[self-repository] vendored: ./ = this repo at this commit (actionlint-validated)
+    with:
+      lang: typescript
+
+  drift:
+    name: drift
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: read
+    outputs:
+      code: ${{ steps.changes.outputs.code }}
+      image: ${{ steps.changes.outputs.image }}
+    steps:
+      - uses: step-security/harden-runner@e14015d583714f6e62063499dc959a02595150a1 # v2.21.1
+        with:
+          egress-policy: audit
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+          fetch-depth: 0
+      - name: Detect changes
+        id: changes
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+          PR_BASE_SHA: ${{ github.event.pull_request.base.sha }}
+          PR_HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+        run: bash .plokr-ci/ci/changes.sh
+      - name: Vendored CI files unchanged
+        run: bash .plokr-ci/check-drift.sh
+
+  node:
+    name: node
+    needs: drift
+    if: ${{ !cancelled() && needs.drift.outputs.code == 'true' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    permissions:
+      contents: read
+    steps:
+      - uses: step-security/harden-runner@e14015d583714f6e62063499dc959a02595150a1 # v2.21.1
+        with:
+          egress-policy: audit
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: 22
+          cache: npm
+      - name: npm ci (no install scripts)
+        run: npm ci --ignore-scripts --no-audit --no-fund
+      - name: lockfile-lint
+        if: ${{ !cancelled() }}
+        run: npx --yes lockfile-lint@5.0.1 --path package-lock.json --type npm --allowed-hosts npm --validate-https --validate-integrity
+      - name: eslint (required)
+        if: ${{ !cancelled() }}
+        run: bash .plokr-ci/ci/node.sh eslint
+      - name: astro check (if @astrojs/check is installed)
+        if: ${{ !cancelled() }}
+        run: bash .plokr-ci/ci/node.sh astro-check
+      - name: Build
+        if: ${{ !cancelled() }}
+        run: npm run build
+      - name: Security-header tests (node --test tests/)
+        if: ${{ !cancelled() }}
+        run: bash .plokr-ci/ci/node.sh node-tests
+      - name: npm audit (runtime deps, fail on high)
+        if: ${{ !cancelled() }}
+        run: npm audit --omit=dev --audit-level=high
+
+  image:
+    name: image
+    needs: drift
+    if: ${{ !cancelled() && needs.drift.outputs.image == 'true' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    permissions:
+      contents: read
+    env:
+      IMAGE_REF: plokr-ci-local/app:ci
+    steps:
+      - uses: step-security/harden-runner@e14015d583714f6e62063499dc959a02595150a1 # v2.21.1
+        with:
+          egress-policy: audit
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Install trivy (sha256-verified)
+        run: bash .plokr-ci/install-tool.sh trivy
+      - name: Trivy DB cache key
+        id: trivy-key
+        run: echo "day=$(date -u +%Y-%m-%d)" >> "$GITHUB_OUTPUT"
+      - name: Cache Trivy DB
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: ~/.cache/trivy
+          key: trivy-db-${{ steps.trivy-key.outputs.day }}
+          restore-keys: trivy-db-
+      - name: Build image (final Dockerfile stage, not pushed)
+        run: docker build --pull -t "$IMAGE_REF" .
+      - name: trivy image
+        run: bash .plokr-ci/ci/trivy.sh image "$IMAGE_REF"
+      - name: Upload findings
+        if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: findings-image
+          path: ${{ runner.temp }}/findings
+          retention-days: 14
+          if-no-files-found: ignore

@@ -1,0 +1,179 @@
+# Vendored by plokr-ci. DO NOT EDIT here; edit plokr-ci and re-sync
+# (.plokr-ci/check-drift.sh fails CI if this file is changed in-repo).
+#
+# Reusable security gates, called from ci.yml and weekly-audit.yml via
+#   uses: ./.github/workflows/_security-common.yml
+# GitHub Free / private repo: no GHAS, so findings go to job logs, the job
+# summary and a "findings-<job>" artifact instead of code scanning.
+name: security-common
+
+on:
+  workflow_call:
+    inputs:
+      lang:
+        description: "Semgrep language pack, used as p/<lang> (golang, typescript, ...)"
+        type: string
+        required: true
+      full_history:
+        description: "Scan the entire git history for secrets (weekly audit)"
+        type: boolean
+        default: false
+
+permissions: {}
+
+env:
+  SEMGREP_IMAGE: semgrep/semgrep@sha256:32e459968daabe7ab86968184a29109b9564aa00392401156f9788452b42786b # 1.178.0
+  ZIZMOR_IMAGE: ghcr.io/zizmorcore/zizmor@sha256:a2eb396d886c053073405c7a980f2139ba2248ec172243cfa3841e57196e8101 # 1.30.1
+
+jobs:
+  secrets:
+    name: secrets
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: read
+    steps:
+      - uses: step-security/harden-runner@e14015d583714f6e62063499dc959a02595150a1 # v2.21.1
+        with:
+          egress-policy: audit
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+          fetch-depth: 0
+      - name: Install gitleaks (sha256-verified)
+        run: bash .plokr-ci/install-tool.sh gitleaks
+      - name: Blocked files
+        run: bash .plokr-ci/check-blocked-files.sh --tracked
+      - name: gitleaks
+        if: ${{ !cancelled() }}
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+          PR_BASE_SHA: ${{ github.event.pull_request.base.sha }}
+          PR_HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+          PUSH_BEFORE: ${{ github.event.before }}
+          HEAD_SHA: ${{ github.sha }}
+          FULL_HISTORY: ${{ inputs.full_history }}
+        run: bash .plokr-ci/ci/gitleaks.sh
+      - name: Upload findings
+        if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: findings-secrets
+          path: ${{ runner.temp }}/findings
+          retention-days: 14
+          if-no-files-found: ignore
+
+  sast:
+    name: sast
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    permissions:
+      contents: read
+    steps:
+      - uses: step-security/harden-runner@e14015d583714f6e62063499dc959a02595150a1 # v2.21.1
+        with:
+          egress-policy: audit
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: semgrep
+        env:
+          SEMGREP_LANG: ${{ inputs.lang }}
+        run: bash .plokr-ci/ci/semgrep.sh "$SEMGREP_LANG"
+      - name: Upload findings
+        if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: findings-sast
+          path: ${{ runner.temp }}/findings
+          retention-days: 14
+          if-no-files-found: ignore
+
+  deps:
+    name: deps
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      contents: read
+    steps:
+      - uses: step-security/harden-runner@e14015d583714f6e62063499dc959a02595150a1 # v2.21.1
+        with:
+          egress-policy: audit
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Install osv-scanner, trivy, syft (sha256-verified)
+        run: |
+          bash .plokr-ci/install-tool.sh osv-scanner
+          bash .plokr-ci/install-tool.sh trivy
+          bash .plokr-ci/install-tool.sh syft
+      - name: Trivy DB cache key
+        id: trivy-key
+        run: echo "day=$(date -u +%Y-%m-%d)" >> "$GITHUB_OUTPUT"
+      - name: Cache Trivy DB
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: ~/.cache/trivy
+          key: trivy-db-${{ steps.trivy-key.outputs.day }}
+          restore-keys: trivy-db-
+      - name: osv-scanner (fail on CVSS >= 7.0)
+        run: bash .plokr-ci/ci/osv.sh
+      - name: trivy fs (vuln, misconfig, secret)
+        if: ${{ !cancelled() }}
+        run: bash .plokr-ci/ci/trivy.sh fs
+      - name: SBOM (syft)
+        if: ${{ !cancelled() }}
+        run: |
+          mkdir -p "$RUNNER_TEMP/sbom"
+          syft scan dir:. --quiet \
+            -o "spdx-json=$RUNNER_TEMP/sbom/sbom.spdx.json" \
+            -o "cyclonedx-json=$RUNNER_TEMP/sbom/sbom.cdx.json"
+      - name: Upload findings
+        if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: findings-deps
+          path: ${{ runner.temp }}/findings
+          retention-days: 14
+          if-no-files-found: ignore
+      - name: Upload SBOM
+        if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: sbom
+          path: ${{ runner.temp }}/sbom
+          retention-days: 30
+          if-no-files-found: ignore
+
+  config-lint:
+    name: config-lint
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: read
+    steps:
+      - uses: step-security/harden-runner@e14015d583714f6e62063499dc959a02595150a1 # v2.21.1
+        with:
+          egress-policy: audit
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Install hadolint, actionlint (sha256-verified)
+        run: |
+          bash .plokr-ci/install-tool.sh hadolint
+          bash .plokr-ci/install-tool.sh actionlint
+      - name: hadolint
+        run: bash .plokr-ci/ci/hadolint.sh
+      - name: actionlint + zizmor
+        if: ${{ !cancelled() }}
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: bash .plokr-ci/ci/workflow-lint.sh
+      - name: Upload findings
+        if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: findings-config-lint
+          path: ${{ runner.temp }}/findings
+          retention-days: 14
+          if-no-files-found: ignore

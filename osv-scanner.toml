@@ -1,0 +1,8 @@
+# Repo-owned (created once by plokr-ci/sync.sh; never overwritten, not drift-checked).
+# Accepted OSV-Scanner risks. Every entry needs a reason and an expiry date;
+# changes to this file are reviewed in the PR diff.
+#
+# [[IgnoredVulns]]
+# id = "GHSA-xxxx-xxxx-xxxx"
+# ignoreUntil = 2026-12-31
+# reason = "Not reachable: we never call the affected function. Tracked in #123."

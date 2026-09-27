@@ -1,0 +1,18 @@
+rules:
+  - id: plokr-ts-eval
+    message: >-
+      eval()/new Function() executes strings as code (code injection, and it
+      breaks a strict Content-Security-Policy). Parse data with JSON.parse or
+      use an explicit dispatch table.
+    severity: ERROR
+    languages: [typescript, javascript]
+    metadata:
+      cwe: "CWE-95: Improper Neutralization of Directives in Dynamically Evaluated Code (Eval Injection)"
+      category: security
+      source: plokr-ci
+    pattern-either:
+      - pattern: eval(...)
+      - pattern: window.eval(...)
+      - pattern: globalThis.eval(...)
+      - pattern: new Function(...)
+      - pattern: Function(...)

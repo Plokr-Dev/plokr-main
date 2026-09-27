@@ -1,0 +1,16 @@
+rules:
+  - id: plokr-go-expr-unrestricted
+    message: >-
+      expr.Compile without an expr.Env(...) option compiles against an
+      unrestricted environment: untyped programs can reach any value or method
+      the runtime env exposes. Always pass expr.Env(<typed env>) so the program
+      is type-checked against an explicit allow-list.
+    severity: ERROR
+    languages: [go]
+    metadata:
+      cwe: "CWE-94: Improper Control of Generation of Code (Code Injection)"
+      category: security
+      source: plokr-ci
+    patterns:
+      - pattern: expr.Compile(...)
+      - pattern-not: expr.Compile($SRC, ..., expr.Env(...), ...)

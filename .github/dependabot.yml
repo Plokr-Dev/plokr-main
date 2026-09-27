@@ -1,0 +1,31 @@
+# Vendored by plokr-ci (profile: astro). DO NOT EDIT here; edit plokr-ci and re-sync.
+# Weekly version updates; minor+patch grouped into one PR per ecosystem.
+# cooldown: wait a few days after a release before proposing it (supply-chain
+# hygiene: most malicious releases are yanked within days).
+version: 2
+updates:
+  - package-ecosystem: "npm"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+    open-pull-requests-limit: 5
+    cooldown:
+      default-days: 7
+    groups:
+      minor-and-patch:
+        update-types: ["minor", "patch"]
+  - package-ecosystem: "docker"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+    open-pull-requests-limit: 3
+    cooldown:
+      default-days: 7
+    groups:
+      minor-and-patch:
+        update-types: ["minor", "patch"]
+# No "github-actions" ecosystem here on purpose: workflows are vendored from
+# plokr-ci, so a bump PR in a product repo would always fail the drift check.
+# Action bumps land in plokr-ci (its own dependabot.yml) and arrive via re-sync.

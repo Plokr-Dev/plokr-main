@@ -1,0 +1,264 @@
+# Vendored by plokr-ci. DO NOT EDIT here; edit plokr-ci and re-sync
+# (.plokr-ci/check-drift.sh fails CI if this file is changed in-repo).
+#
+# Weekly deep audit (Mon 02:00 UTC): full-history secret scan + every
+# security-common gate, a profile-specific deep job, and a container image
+# rescan (new CVEs land in unchanged images). Results are aggregated into one
+# Markdown report (job summary + artifact). If anything failed, ONE issue titled
+# "Weekly security audit" is opened or updated; it is closed when a later run
+# is fully green. go repos: dast.yml's weekly ZAP full scan comments on the
+# same issue when it fails.
+name: weekly-audit
+
+on:
+  schedule:
+    - cron: "0 2 * * 1"
+  workflow_dispatch:
+
+permissions: {}
+
+concurrency:
+  group: weekly-audit-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  detect:
+    name: detect profile
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: read
+    outputs:
+      profile: ${{ steps.p.outputs.profile }}
+      lang: ${{ steps.p.outputs.lang }}
+      dockerfile: ${{ steps.p.outputs.dockerfile }}
+    steps:
+      - uses: step-security/harden-runner@e14015d583714f6e62063499dc959a02595150a1 # v2.21.1
+        with:
+          egress-policy: audit
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - id: p
+        name: Read .plokr-ci/PROFILE
+        run: |
+          profile="$(tr -d '\r\n' < .plokr-ci/PROFILE)"
+          case "$profile" in
+            go) lang=golang ;;
+            angular|astro) lang=typescript ;;
+            *) echo "::error::unknown profile '$profile' in .plokr-ci/PROFILE"; exit 1 ;;
+          esac
+          dockerfile=false
+          if [ -f Dockerfile ]; then dockerfile=true; fi
+          {
+            echo "profile=$profile"
+            echo "lang=$lang"
+            echo "dockerfile=$dockerfile"
+          } >> "$GITHUB_OUTPUT"
+      - name: Drift check
+        run: bash .plokr-ci/check-drift.sh
+
+  security:
+    needs: detect
+    permissions:
+      contents: read
+    uses: ./.github/workflows/_security-common.yml # zizmor: ignore[self-repository] vendored: ./ = this repo at this commit (actionlint-validated)
+    with:
+      lang: ${{ needs.detect.outputs.lang }}
+      full_history: true
+
+  deep-go:
+    name: deep (go)
+    needs: detect
+    if: ${{ needs.detect.outputs.profile == 'go' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    permissions:
+      contents: read
+    steps:
+      - uses: step-security/harden-runner@e14015d583714f6e62063499dc959a02595150a1 # v2.21.1
+        with:
+          egress-policy: audit
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e # v7.0.0
+        with:
+          go-version-file: go.mod
+          cache: true
+      - name: govulncheck (verbose)
+        run: |
+          mkdir -p "$RUNNER_TEMP/findings"
+          out="$RUNNER_TEMP/findings/govulncheck.txt"
+          rc=0
+          go run golang.org/x/vuln/cmd/govulncheck@v1.8.0 -show verbose ./... > "$out" 2>&1 || rc=$?
+          cat "$out"
+          status=PASS
+          if [ "$rc" -ne 0 ]; then status='**FAIL**'; fi
+          {
+            echo "### govulncheck (weekly): $status"
+            echo
+            echo '```'
+            tail -n 60 "$out"
+            echo '```'
+          } | tee -a "$GITHUB_STEP_SUMMARY" > "$RUNNER_TEMP/findings/govulncheck.md"
+          exit "$rc"
+      - name: Outdated modules (informational)
+        if: ${{ !cancelled() }}
+        run: |
+          mkdir -p "$RUNNER_TEMP/findings"
+          {
+            echo "### Outdated Go modules (informational)"
+            echo
+            echo '```'
+            go list -m -u -f '{{if and (not .Main) .Update}}{{.Path}} {{.Version}} -> {{.Update.Version}}{{end}}' all | sed '/^$/d' | head -100
+            echo '```'
+          } | tee -a "$GITHUB_STEP_SUMMARY" > "$RUNNER_TEMP/findings/go-outdated.md"
+      - name: Upload findings
+        if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: findings-deep-go
+          path: ${{ runner.temp }}/findings
+          retention-days: 14
+          if-no-files-found: ignore
+
+  deep-node:
+    name: deep (node)
+    needs: detect
+    if: ${{ needs.detect.outputs.profile == 'angular' || needs.detect.outputs.profile == 'astro' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    permissions:
+      contents: read
+    steps:
+      - uses: step-security/harden-runner@e14015d583714f6e62063499dc959a02595150a1 # v2.21.1
+        with:
+          egress-policy: audit
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: 22
+      - name: npm audit incl. dev dependencies (fail on critical)
+        run: |
+          mkdir -p "$RUNNER_TEMP/findings"
+          out="$RUNNER_TEMP/findings/npm-audit-all.txt"
+          rc=0
+          npm audit --audit-level=critical > "$out" 2>&1 || rc=$?
+          cat "$out"
+          status=PASS
+          if [ "$rc" -ne 0 ]; then status='**FAIL**'; fi
+          {
+            echo "### npm audit, all deps (weekly): $status"
+            echo
+            echo '```'
+            tail -n 40 "$out"
+            echo '```'
+          } | tee -a "$GITHUB_STEP_SUMMARY" > "$RUNNER_TEMP/findings/npm-audit-all.md"
+          exit "$rc"
+      - name: Outdated packages (informational)
+        if: ${{ !cancelled() }}
+        run: |
+          mkdir -p "$RUNNER_TEMP/findings"
+          {
+            echo "### Outdated npm packages (informational)"
+            echo
+            echo '```'
+            npm outdated --long 2>&1 | head -100 || true
+            echo '```'
+          } | tee -a "$GITHUB_STEP_SUMMARY" > "$RUNNER_TEMP/findings/npm-outdated.md"
+      - name: Upload findings
+        if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: findings-deep-node
+          path: ${{ runner.temp }}/findings
+          retention-days: 14
+          if-no-files-found: ignore
+
+  deep-image:
+    name: deep (container image rescan)
+    needs: detect
+    if: ${{ needs.detect.outputs.dockerfile == 'true' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    permissions:
+      contents: read
+    env:
+      IMAGE_REF: plokr-ci-local/app:weekly
+    steps:
+      - uses: step-security/harden-runner@e14015d583714f6e62063499dc959a02595150a1 # v2.21.1
+        with:
+          egress-policy: audit
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Install trivy (sha256-verified)
+        run: bash .plokr-ci/install-tool.sh trivy
+      - name: Build image (final stage, not pushed)
+        run: docker build --pull -t "$IMAGE_REF" .
+      - name: trivy image
+        run: bash .plokr-ci/ci/trivy.sh image "$IMAGE_REF"
+      - name: Upload findings
+        if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: findings-deep-image
+          path: ${{ runner.temp }}/findings
+          retention-days: 14
+          if-no-files-found: ignore
+
+  report:
+    name: report + issue
+    needs: [detect, security, deep-go, deep-node, deep-image]
+    if: ${{ always() }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: read
+      issues: write # open/update/close the single "Weekly security audit" issue
+    env:
+      RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+    steps:
+      - uses: step-security/harden-runner@e14015d583714f6e62063499dc959a02595150a1 # v2.21.1
+        with:
+          egress-policy: audit
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Download findings
+        # A job that died before uploading must not stop the report/issue step.
+        continue-on-error: true
+        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
+        with:
+          pattern: findings-*
+          path: ${{ runner.temp }}/all-findings
+      - name: Build report
+        id: report
+        env:
+          NEEDS_JSON: ${{ toJSON(needs) }}
+        run: |
+          PLOKR_CI_VERSION="$(tr -d '\r\n' < .plokr-ci/VERSION)"
+          export PLOKR_CI_VERSION
+          bash .plokr-ci/ci/audit-report.sh "$RUNNER_TEMP/all-findings" "$RUNNER_TEMP/weekly-audit-report.md"
+      - name: Upload report
+        if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: weekly-audit-report
+          path: ${{ runner.temp }}/weekly-audit-report.md
+          retention-days: 30
+      - name: Open or update the audit issue
+        if: ${{ steps.report.outputs.failed == 'true' }}
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+        run: bash .plokr-ci/ci/audit-issue.sh upsert "$RUNNER_TEMP/weekly-audit-report.md"
+      - name: Close the audit issue when green
+        if: ${{ steps.report.outputs.failed == 'false' }}
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+        run: bash .plokr-ci/ci/audit-issue.sh resolve

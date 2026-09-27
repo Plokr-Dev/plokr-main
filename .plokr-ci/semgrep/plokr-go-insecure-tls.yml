@@ -1,0 +1,14 @@
+rules:
+  - id: plokr-go-insecure-tls
+    message: >-
+      InsecureSkipVerify: true disables TLS certificate verification and allows
+      man-in-the-middle attacks. Configure RootCAs for private CAs instead.
+    severity: ERROR
+    languages: [go]
+    metadata:
+      cwe: "CWE-295: Improper Certificate Validation"
+      category: security
+      source: plokr-ci
+    pattern-either:
+      - pattern: "tls.Config{..., InsecureSkipVerify: true, ...}"
+      - pattern: $CFG.InsecureSkipVerify = true
