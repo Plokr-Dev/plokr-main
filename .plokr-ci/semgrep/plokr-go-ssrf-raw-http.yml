@@ -6,7 +6,7 @@ rules:
       then reach internal services and cloud metadata (SSRF). Use
       internal/netguard.Client() instead.
     # WARNING while internal/netguard is being rolled out; flip to ERROR once migrated.
-    severity: WARNING
+    severity: ERROR
     languages: [go]
     metadata:
       cwe: "CWE-918: Server-Side Request Forgery (SSRF)"
