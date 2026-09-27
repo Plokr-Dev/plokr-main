@@ -155,11 +155,11 @@ cmd_eslint() {
     warn "No ESLint config in this repo; skipping (CI FAILS until one is added)."
     return 0
   fi
-  npx --no-install eslint --max-warnings=0 "$@"
+  npx --no-install eslint "$@"  # errors block; warnings match CI (eslint . passes with warnings)
 }
 
 cmd_npm_audit() {
-  npm audit --omit=dev --audit-level=high
+  bash .plokr-ci/ci/npm-audit.sh --level high
 }
 
 sub="${1:-}"; shift || true

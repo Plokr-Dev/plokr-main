@@ -146,7 +146,7 @@ jobs:
           mkdir -p "$RUNNER_TEMP/findings"
           out="$RUNNER_TEMP/findings/npm-audit-all.txt"
           rc=0
-          npm audit --audit-level=critical > "$out" 2>&1 || rc=$?
+          bash .plokr-ci/ci/npm-audit.sh --all --level critical > "$out" 2>&1 || rc=$?
           cat "$out"
           status=PASS
           if [ "$rc" -ne 0 ]; then status='**FAIL**'; fi

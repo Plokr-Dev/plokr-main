@@ -1,14 +1,14 @@
 # plokr-ci MANIFEST: sha256 (CR-stripped) of every vendored file.
 # Written by plokr-ci/sync.sh; verified by .plokr-ci/check-drift.sh. DO NOT EDIT.
-# plokr-ci eee443ee0f9cfe02ebccb8ae6ca222ebfb988252, profile astro
+# plokr-ci 6adb421665ed81eed982190e30de54e86f2a02c8, profile astro
 899d3efadebea963485e5f1e9079e4e1a67a79892cc8231d3678306e9b5acb75  .github/CODEOWNERS
 7cf0587d0fc0bbc5cd1a34f96baa0fe3e36a3592b770b3506985ff1ea0a8ebd4  .github/dependabot.yml
 5272b0cdea601a5623c90165c1aa143a6d9b49cf0fc07174aaa32608071482bd  .github/workflows/_security-common.yml
-a6c7a305b3a7a2f481f0261f96c3d2bd1645897df581ea6c6340f3b1224939ad  .github/workflows/ci.yml
-2a9e4305c79a82c1425ae204e060a0fbb811604c920f09d0750ff3b0cb747ed0  .github/workflows/weekly-audit.yml
+d610433dc067e3d0a8233c6564611311182d010cd278ac05338b45bcf0769a2c  .github/workflows/ci.yml
+7838d4fa161a4a37d242dba3826347f3d5f9442a54a33797d3731df62175f6c6  .github/workflows/weekly-audit.yml
 9f3366f580a6eb17d2dec3f0a02cf0dd29cd25ce4dc7bcf1a4b4d2b6c661c9e4  .plokr-ci/.gitattributes
 c6c7748a6b1079f06617dadbb947aa480a2d5b2fd877e8e48d31434dfa437efa  .plokr-ci/PROFILE
-a4ae6d82259bb645a23aa683b4764a7dd06ff6a13c893798ef6a02a70af5e827  .plokr-ci/VERSION
+cd9fdf1bee00742e9a4213ef1825e3985e3c6e89b379cf53a6b51e30eed902ec  .plokr-ci/VERSION
 d3a88695aa9867bfe82642b73a4ece890a96b83623ba39d444fdf4d8b85f7345  .plokr-ci/check-blocked-files.sh
 c7f12a4682c407a181631ec92b090d6af982f22132079ed68b19eda1e44514f2  .plokr-ci/check-drift.sh
 a56eec70f92133be59d406bfefbfcec226e48507d44620010b9609ea394d0747  .plokr-ci/ci/audit-issue.sh
@@ -18,12 +18,13 @@ a56eec70f92133be59d406bfefbfcec226e48507d44620010b9609ea394d0747  .plokr-ci/ci/a
 1189572733e5013b865f04db5ac2daac68abe0e6a4a41718b2faf49aabe191aa  .plokr-ci/ci/hadolint.sh
 7b7ddca83d8d4ee551d98444b2217c62469df3c92fb61f174d8ba9d08530980e  .plokr-ci/ci/lib.sh
 42e19794cdaf723da0fd5d0bf433234e7dff5026a2fed800ff63470a31440e5a  .plokr-ci/ci/node.sh
+c4734880ba9714c810a7cd7bc58373b3f3e0a59338e5ddd7a74263662f154292  .plokr-ci/ci/npm-audit.sh
 923f6e80f16c8e3135ff288f8eccc05d365b0966c5919db7b5c684031f377392  .plokr-ci/ci/osv.sh
 9a4860779ce79f75542de96ff0e388eb950dbc52f1a72d14d32f5b67d9f8237f  .plokr-ci/ci/semgrep.sh
 c9f7a5c8a9043561a9c845cdd0d48326cf77b999b0b708a620f7f384c9e5944d  .plokr-ci/ci/trivy.sh
 718d1ed76755e22ae344ef12433e0788f41e9293b3f0fc78fbce05b7b3c2208c  .plokr-ci/ci/workflow-lint.sh
 ce0bad484f17dd5b8842033be0d0ad5d834a117899433c24da4283dad51454dd  .plokr-ci/gitleaks.toml
-2c805a4b4041e16f089d6ab00197631954f3db308bc3934259b7a0d646986b29  .plokr-ci/hooks.sh
+bb6702d753cb869b12375a29f163bb970d17503a2e3f07e082333dce9cbe92c9  .plokr-ci/hooks.sh
 d3b1b3d0f1c60adf360f5e786d61195fee457930874315da57d7793d84d8abcf  .plokr-ci/install-tool.sh
 68b090b21376019feff0254da1283d4b651a83c02b3d5c5195daa337f01e510b  .plokr-ci/semgrep/plokr-go-exec-nonconst.yml
 bccf56f3a4decdb2a14db7675a035c836b21263a7a140a6491c7d3d6e545f9b3  .plokr-ci/semgrep/plokr-go-expr-unrestricted.yml

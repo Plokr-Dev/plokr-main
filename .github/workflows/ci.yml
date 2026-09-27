@@ -90,7 +90,7 @@ jobs:
         run: bash .plokr-ci/ci/node.sh node-tests
       - name: npm audit (runtime deps, fail on high)
         if: ${{ !cancelled() }}
-        run: npm audit --omit=dev --audit-level=high
+        run: bash .plokr-ci/ci/npm-audit.sh --level high
 
   image:
     name: image
