@@ -1,0 +1,7 @@
+# Repo-owned (created once by plokr-ci/sync.sh; never overwritten, not drift-checked).
+# Accepted Trivy findings, one ID per line, each with a dated reason, e.g.:
+#
+# # 2026-12-31: base image has no fix yet; re-check at next Alpine release (#123)
+# CVE-2026-00000
+# # exp:2026-12-31 limits the ignore to that date
+# AVD-DS-0002 exp:2026-12-31

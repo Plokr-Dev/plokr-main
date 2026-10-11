@@ -1,0 +1,2 @@
+# Repo-owned. Exact repo-relative paths of *.pem files that may be committed.
+# ONLY public keys/certificates. check-blocked-files.sh rejects every other *.pem.

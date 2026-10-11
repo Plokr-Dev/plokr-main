@@ -1,0 +1,22 @@
+rules:
+  - id: plokr-go-jwt-parse-no-method-check
+    message: >-
+      JWT parsed without jwt.WithValidMethods(...). Without pinning the
+      algorithm, a token can choose its own alg (algorithm-confusion attacks).
+      Pass jwt.WithValidMethods([]string{"HS256"}) (or the expected method).
+    severity: ERROR
+    languages: [go]
+    metadata:
+      cwe: "CWE-347: Improper Verification of Cryptographic Signature"
+      category: security
+      source: plokr-ci
+    pattern-either:
+      - patterns:
+          - pattern: jwt.Parse($TOKEN, $KEYFUNC, ...)
+          - pattern-not: jwt.Parse($TOKEN, $KEYFUNC, ..., jwt.WithValidMethods(...), ...)
+      - patterns:
+          - pattern: jwt.ParseWithClaims($TOKEN, $CLAIMS, $KEYFUNC, ...)
+          - pattern-not: jwt.ParseWithClaims($TOKEN, $CLAIMS, $KEYFUNC, ..., jwt.WithValidMethods(...), ...)
+      - patterns:
+          - pattern: jwt.NewParser(...)
+          - pattern-not: jwt.NewParser(..., jwt.WithValidMethods(...), ...)

@@ -1,6 +1,6 @@
 # Plokr Main (Landing) — Agent Guide
 
-Astro 5 static site (+ React islands via `@astrojs/react`) implementing the "Plokr Homepage"
+Astro 7 static site (+ React islands via `@astrojs/react`) implementing the "Plokr Homepage"
 Claude Design handoff. `chats/` holds the design transcripts; `project/Plokr Homepage.html`
 is the primary visual source of truth.
 
@@ -12,8 +12,9 @@ is the primary visual source of truth.
 | Build | `npm run build` (`astro build`) |
 | Type/content check | `npm run check` (`astro check`) |
 | Preview | `npm run preview` |
-| Unit/E2E tests | none configured yet |
-| Lint / security scan | not wired yet at repo root — vendored config lives in `_ci/plokr-main` only |
+| Unit tests | `npm test` (`node --test tests/`) — header-drift and build-output checks; no component/E2E suite |
+| Lint | `npm run lint` (`eslint .`) |
+| Security scan | `bash ../.claude/gates/gate.sh run main scan` — vendored gate config lives in this repo's own `.plokr-ci/` |
 
 ## Repo invariants
 

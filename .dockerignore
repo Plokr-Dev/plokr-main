@@ -5,3 +5,15 @@ dist
 coverage
 *.log
 .DS_Store
+.git
+.github
+# Secrets / local env never enter the build context (PUBLIC_* come in as build args).
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+# Design-handoff material and tests are not part of the site build.
+chats
+project
+tests

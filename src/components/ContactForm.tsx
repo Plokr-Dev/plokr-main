@@ -1,6 +1,22 @@
 import { useState, type FormEvent } from 'react';
 
-const ENDPOINT = import.meta.env.PUBLIC_FORMSPREE_ENDPOINT as string | undefined;
+const FORMSPREE_ORIGIN = 'https://formspree.io';
+
+// Only accept a Formspree form URL: it is the one origin allowed by the CSP
+// (connect-src / form-action in public/_headers), and it keeps a misconfigured
+// build from posting demo requests to an arbitrary host.
+function resolveEndpoint(raw: string | undefined): string | null {
+  if (!raw) return null;
+  try {
+    const url = new URL(raw);
+    return url.origin === FORMSPREE_ORIGIN && url.pathname.startsWith('/f/') ? url.toString() : null;
+  } catch {
+    return null;
+  }
+}
+
+const ENDPOINT = resolveEndpoint(import.meta.env.PUBLIC_FORMSPREE_ENDPOINT as string | undefined);
+const UNCONFIGURED_MESSAGE = 'Online requests are unavailable right now. Please email sales@plokr.com.';
 
 export default function ContactForm() {
   const [sent, setSent] = useState(false);
@@ -9,14 +25,15 @@ export default function ContactForm() {
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setSubmitting(true);
     setError('');
 
     if (!ENDPOINT) {
-      // Fallback: just show success (dev / unconfigured)
-      setTimeout(() => { setSent(true); setSubmitting(false); }, 600);
+      // Never fake success: an unconfigured build would silently drop leads.
+      setError(UNCONFIGURED_MESSAGE);
       return;
     }
+
+    setSubmitting(true);
 
     try {
       const form = e.currentTarget;
@@ -42,7 +59,7 @@ export default function ContactForm() {
     return (
       <div className="thanks">
         <div className="ok-icon" aria-hidden="true">✓</div>
-        <h3>Thanks — we'll be in touch.</h3>
+        <h3>Thanks — we’ll be in touch.</h3>
         <p>A member of our team will reach out within one business day to set up your demo.</p>
       </div>
     );
@@ -52,7 +69,7 @@ export default function ContactForm() {
     <form onSubmit={handleSubmit} noValidate>
       <h3 style={{ fontFamily: 'Archivo', fontSize: 20, marginBottom: 6 }}>Request a demo</h3>
       <p style={{ color: 'var(--muted)', fontSize: 14, marginBottom: 22 }}>
-        Tell us a little about your team and we'll tailor the walkthrough.
+        Tell us a little about your team and we’ll tailor the walkthrough.
       </p>
 
       <div className="frow2">

@@ -4,7 +4,7 @@
 
 ## What it is / live-vs-legacy
 
-Astro 5 static marketing site (+ React islands) for Plokr Core (Jira monitoring & dependency
+Astro 7 static marketing site (+ React islands) for Plokr Core (Jira monitoring & dependency
 health) and Plokr Integrate (on-prem scanning). It is the handoff implementation of the "Plokr
 Homepage" Claude Design export (`project/`, `chats/`).
 
@@ -12,26 +12,30 @@ Homepage" Claude Design export (`project/`, `chats/`).
 - It is the only one of the two wired into the workspace root `docker-compose.yml` — service
   `landing` (`context: ./plokr-main`, container `plokr-landing`, host port **3000**) — and is the
   target of `ADMIN_PUBLIC_URL`/cross-app CTA wiring from the other repos.
-- It owns a working deploy pipeline: `Dockerfile` (Node build → `nginx:1.27-alpine` serve) +
-  `nginx.conf`, plus a Cloudflare adapter in `astro.config.mjs` and a `public/_headers` file (the
-  Cloudflare Pages header convention) and a root `vercel.json` with the same CSP/security headers
-  (a holdover from an earlier Vercel deploy target — the Cloudflare adapter is what's current).
+- It owns a working deploy pipeline: `Dockerfile` (Node build → `nginxinc/nginx-unprivileged`
+  serve) + `nginx.conf`, with `public/_headers` (the Cloudflare Pages header convention) as the
+  single canonical source of CSP/security headers — `nginx/security-headers.conf` (included by
+  `nginx.conf`) and the root `vercel.json` (a holdover from an earlier Vercel deploy target) must
+  mirror it exactly, and `tests/headers.test.mjs` fails the build if they drift. There is no
+  adapter in `astro.config.mjs` — the `@astrojs/cloudflare` adapter was removed (zero on-demand
+  routes meant it only emitted an unused Worker bundle); the site is fully static (`output:
+  'static'`).
 - `plokr-website` (sibling repo) has none of this: no Dockerfile, no nginx config, no compose
   entry. It is a separately-built, more recent redesign (first commit 2026-07-18 vs. this repo's
   2026-07-15, built from a different Claude Design export — "Plokr Site") that is **not deployed or
   wired into anything verifiable in this workspace**. Treat `plokr-main` as the real site and
   `plokr-website` as an in-progress replacement candidate until infra says otherwise.
 - **Conflict to flag:** both repos set `site: 'https://plokr.com'` in their `astro.config.mjs`.
-  Only one can actually own that domain — resolve before either one's unmerged CI/security work
-  ships.
+  Only one can actually own that domain — this is still an open product decision, unresolved by
+  the security-debt merge.
 
 ## Stack
 
 | Layer | Version |
 |---|---|
-| Framework | Astro ^5.1, `output: 'static'`, `adapter: cloudflare()` (SSR-capable, no on-demand routes today → no Worker bundle emitted) |
-| Islands | `@astrojs/react` 4.2 + React 18.3 (`client:load` only — no `client:visible`/`idle` anywhere) |
-| Sitemap | `@astrojs/sitemap` 3.2 |
+| Framework | Astro ^7.3.5, `output: 'static'`, no adapter (fully static — the `@astrojs/cloudflare` adapter was dropped since zero on-demand routes need it) |
+| Islands | `@astrojs/react` ^7.0.0 + React 18.3 (`client:load` only — no `client:visible`/`idle` anywhere) |
+| Sitemap | `@astrojs/sitemap` ^3.7.4 |
 | Icons | `lucide-react` |
 | Lang | TypeScript 5.7 |
 | Fonts | Google Fonts (preconnect in `Layout.astro`) |
@@ -93,14 +97,16 @@ pipeline — PNGs only, uploaded pre-sized.
    structure changes — recreate pixel-perfect rather than freelancing (`AGENTS.md`).
 2. No client framework beyond the declared React islands, and no new hydration directive beyond
    `client:load` without a stated reason — this is a performance-budgeted static marketing site.
-3. Static output only (`output: 'static'`) — don't add an on-demand (`prerender = false`) route
-   without a real reason; it would emit a Cloudflare Worker bundle where none exists today.
+3. Static output only (`output: 'static'`) — there is no adapter configured, so an on-demand
+   (`prerender = false`) route will fail to build; re-add `@astrojs/cloudflare` (or another
+   adapter) and move the Pages output directory to `dist/client` first if SSR is ever needed.
 4. No backend secrets and no authenticated API calls belong here — `AuthModal` must stay a redirect
    dressed as a sign-in flow, never a real credential submission.
 5. Keep `Layout.astro`'s SEO head (canonical, Open Graph, Twitter card, security meta) intact on
    every page; set `noIndex` explicitly for non-indexable pages (see `404.astro`).
-6. `public/_headers` (Cloudflare) and root `vercel.json` carry the same CSP/HSTS/frame headers —
-   if you change one for a real reason, change both or explicitly deprecate the stale one.
+6. `public/_headers` is the canonical CSP/HSTS/frame header source; `nginx/security-headers.conf`
+   and root `vercel.json` must mirror it exactly — `tests/headers.test.mjs` fails the build if they
+   drift, so update all three together.
 7. `PUBLIC_PLOKR_APP` is inlined at **build time** (Astro `PUBLIC_*` convention) — it cannot be
    changed at container runtime; it must be passed as a Docker build `ARG`/compose build arg.
 8. `ContactForm` posts to `PUBLIC_FORMSPREE_ENDPOINT` (external, public form backend) — this is not
@@ -116,8 +122,9 @@ pipeline — PNGs only, uploaded pre-sized.
 | Build | `npm run build` | `astro build` → `dist/` |
 | Type/content check | `npm run check` | `astro check` |
 | Preview | `npm run preview` | |
-| Unit/E2E tests | — | None configured |
-| Lint / security scan | — | Vendored config lives only in `_ci/plokr-main`; not merged onto this repo's live `main` branch (a separate `ci/security-qa` worktree branch carries an Astro-7 + CSP + lint/test upgrade not yet merged here) |
+| Unit tests | `npm test` | `node --test tests/` — header-drift, build-output and lint-adjacent checks (no component/E2E suite) |
+| Lint | `npm run lint` | `eslint .` (`eslint.config.js`, incl. `eslint-plugin-security`/`astro`/`react`) |
+| Security scan | `bash ../.claude/gates/gate.sh run main scan` | Vendored gate config now lives in this repo's own `.plokr-ci/` (gitleaks, semgrep, osv-scanner, npm audit); `lefthook.yml` wires pre-push hooks |
 
 ## Local dev
 
@@ -131,6 +138,3 @@ comment). To exercise the production build path: root `docker compose up` builds
 - The live-vs-legacy call above is inferred from docker-compose wiring + presence/absence of deploy
   config + commit history, not from a canonical statement anywhere that says "plokr-main is live" —
   no deployment logs or DNS records were available to check directly.
-- A `ci/security-qa` branch (checked out in another worktree, not this one) contains an Astro 7
-  upgrade and new lint/test tooling not reflected in this file; this CLAUDE.md describes the
-  checked-out `main` branch (Astro ^5.1) as it exists on disk today.

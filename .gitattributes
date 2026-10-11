@@ -1,0 +1,6 @@
+# >>> plokr-ci (managed by plokr-ci sync.sh; do not edit inside this block)
+*.sh text eol=lf
+.plokr-ci/** text eol=lf
+.github/** text eol=lf
+lefthook.yml text eol=lf
+# <<< plokr-ci
