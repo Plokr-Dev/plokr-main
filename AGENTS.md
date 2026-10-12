@@ -26,9 +26,14 @@ No repo-level `CLAUDE.md` yet:
   the handoff's intent first.
 - Public marketing surface: no backend secrets, no authenticated API calls belong here.
 
-Guardrails: see `../AGENTS.md` and `../CLAUDE.md`. Changes here are `full`-tier (all 7
-gates: build, tests, scan, scopecheck, qa, security, scope — tests has no suite here, see
-above) unless only this file or `.claude/**` changed (`instructions`-tier: scan + security
+Guardrails: see `../AGENTS.md` and `../CLAUDE.md`. Changes here are `full`-tier (7 gates:
+build, tests, scan, scopecheck, qa, security, scope — tests has no suite here, see above —
+9 when the diff touches a UI path like `src/**` non-test or `*.astro`: adds `product`+`ux`)
+unless only this file or `.claude/**` changed (`instructions`-tier: scan + security
 only). Stay inside the active scope manifest (`gate.sh scope show plokr-main`) — if the
 task needs more files, stop and get the manifest amended. Do not commit until
 `bash ../.claude/gates/gate.sh check plokr-main` passes.
+
+`product`/`ux` run the real app: `npm run dev` → `http://localhost:4321` (Astro default
+port; no backend needed for this repo's own pages). UI quality bar: `../AGENTS.md`'s "UI
+quality bar" section.
