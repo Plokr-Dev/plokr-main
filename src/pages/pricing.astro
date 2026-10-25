@@ -4,44 +4,46 @@ import PricingTiers from '../components/PricingTiers';
 import FAQAccordion from '../components/FAQAccordion';
 import { PLOKR_APP } from '../lib/constants';
 
-type FeatureRow = [feature: string, starter: string, team: string, enterprise: string];
+type FeatureRow = [feature: string, individual: string, team: string];
 const groups: [group: string, rows: FeatureRow[]][] = [
+  ['Plan', [
+    ['Seats', '1', '3-500'],
+    ['Credits per month', '1,500', '4,000 per seat'],
+  ]],
   ['Monitoring', [
-    ['Jira & Trello boards', '1 project', 'Unlimited', 'Unlimited'],
-    ['Repos monitored', '3', '25', 'Unlimited'],
-    ['Dependency scan frequency', 'Daily', 'Real-time', 'Real-time'],
-    ['Stale & blocked detection', 'no', 'yes', 'yes'],
-    ['Trend history', '7 days', '90 days', 'Unlimited'],
+    ['Jira & Trello boards', 'yes', 'yes'],
+    ['Repos monitored', 'yes', 'yes'],
+    ['Real-time dependency scans', 'yes', 'yes'],
+    ['Stale & blocked detection', 'yes', 'yes'],
+    ['Trend history', 'yes', 'yes'],
   ]],
   ['Alerts', [
-    ['Email digests', 'yes', 'yes', 'yes'],
-    ['Outbound webhooks', 'no', 'yes', 'yes'],
-    ['Custom alert policies', 'no', 'yes', 'yes'],
+    ['Email digests', 'yes', 'yes'],
+    ['Outbound webhooks', 'yes', 'yes'],
+    ['Custom alert policies', 'yes', 'yes'],
   ]],
   ['Security & admin', [
-    ['SSO / SAML & SCIM', 'no', 'no', 'yes'],
-    ['Audit logs', 'no', 'no', 'yes'],
-    ['Role-based access', 'no', 'Basic', 'Advanced'],
-    ['SOC 2 report & DPA', 'no', 'no', 'yes'],
+    ['SSO / SAML & SCIM', 'yes', 'yes'],
+    ['Audit logs', 'yes', 'yes'],
+    ['Role-based access', 'yes', 'yes'],
+    ['SOC 2 report & DPA', 'yes', 'yes'],
   ]],
   ['Support', [
-    ['Community support', 'yes', 'yes', 'yes'],
-    ['Priority support', 'no', 'yes', 'yes'],
-    ['Dedicated SLA & CSM', 'no', 'no', 'yes'],
+    ['Priority support', 'yes', 'yes'],
   ]],
 ] as const;
 ---
 
 <Layout
   title="Pricing | Plokr"
-  description="Start free, upgrade when you grow. Per workspace, no per-seat surprises. Compare Starter, Team, and Enterprise plans."
+  description="Two plans, every feature. Individual is $29/month; Team is $79 per seat/month with a 3-seat minimum. Every plan starts with a 7-day free trial."
   current="pricing"
 >
   <header class="phero pricing-hero">
     <div class="wrap" style="text-align:center">
       <span class="eyebrow" style="margin:0 auto">Pricing</span>
-      <h1 style="margin:20px auto 0">Pricing that scales with your team.</h1>
-      <p class="lede" style="margin:22px auto 0">Start free, upgrade when you grow. Per workspace, no per-seat surprises.</p>
+      <h1 style="margin:20px auto 0">Two plans. Every feature. Pick by team size.</h1>
+      <p class="lede" style="margin:22px auto 0">Every plan starts with a 7-day free trial. A card is required, and nothing is charged until day 8.</p>
     </div>
   </header>
 
@@ -55,31 +57,28 @@ const groups: [group: string, rows: FeatureRow[]][] = [
   <!-- Comparison table (static HTML — great for SEO) -->
   <section class="sec soft">
     <div class="wrap">
-      <div class="sec-head"><h2>Compare every feature.</h2></div>
+      <div class="sec-head"><h2>Every feature in both plans.</h2>
+        <p>Only the number of seats and the credits differ.</p></div>
       <table class="ctable">
         <thead>
           <tr>
             <th style="width:40%">Feature</th>
-            <th class="c">Starter</th>
+            <th class="c">Individual</th>
             <th class="c">Team</th>
-            <th class="c">Enterprise</th>
           </tr>
         </thead>
         <tbody>
           {groups.map(([groupName, rows]) => (
             <>
-              <tr class="grp"><td colspan="4">{groupName}</td></tr>
-              {rows.map(([feature, starter, team, enterprise]) => (
+              <tr class="grp"><td colspan="3">{groupName}</td></tr>
+              {rows.map(([feature, individual, team]) => (
                 <tr>
                   <td>{feature}</td>
                   <td class="c">
-                    {starter === 'yes' ? <span class="yes">✓</span> : starter === 'no' ? <span class="no">—</span> : starter}
+                    {individual === 'yes' ? <span class="yes">✓</span> : individual}
                   </td>
                   <td class="c">
-                    {team === 'yes' ? <span class="yes">✓</span> : team === 'no' ? <span class="no">—</span> : team}
-                  </td>
-                  <td class="c">
-                    {enterprise === 'yes' ? <span class="yes">✓</span> : enterprise === 'no' ? <span class="no">—</span> : enterprise}
+                    {team === 'yes' ? <span class="yes">✓</span> : team}
                   </td>
                 </tr>
               ))}
@@ -105,11 +104,11 @@ const groups: [group: string, rows: FeatureRow[]][] = [
   <section class="sec ctaband" style="padding-top:0">
     <div class="wrap">
       <div class="box">
-        <h2>Start free. Upgrade when you're ready.</h2>
-        <p>No credit card to begin, and your data stays read-only from the first connection.</p>
+        <h2>Try every feature for 7 days.</h2>
+        <p>A card is required to start; nothing is charged until day 8, and you can cancel any time. Your data stays read-only from the first connection.</p>
         <div class="cta">
-          <a class="btn btn-primary btn-lg" href={PLOKR_APP} data-auth="signup" style="background:#fff;color:#0C1A2B">Start free trial</a>
-          <a class="btn btn-line btn-lg" href="/contact">Talk to sales</a>
+          <a class="btn btn-primary btn-lg" href={PLOKR_APP} data-auth="signup">Start 7-day free trial</a>
+          <a class="btn btn-line btn-lg" href="/contact">Talk to us</a>
         </div>
       </div>
     </div>

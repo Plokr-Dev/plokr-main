@@ -1,10 +1,11 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Lock } from 'lucide-react';
 import { PLOKR_APP } from '../lib/constants';
 
 export default function AuthModal() {
   const [mode, setMode] = useState<'signup' | 'login' | null>(null);
   const [redirecting, setRedirecting] = useState(false);
+  const modalRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const handler = (e: Event) => {
@@ -16,17 +17,40 @@ export default function AuthModal() {
     return () => window.removeEventListener('plokr:open-auth', handler);
   }, []);
 
-  // Trap focus inside modal and close on Escape
+  // Trap focus inside modal, restore it on close, and close on Escape
   useEffect(() => {
     if (!mode) return;
+    const opener = document.activeElement as HTMLElement | null;
+    const focusables = (): HTMLElement[] =>
+      Array.from(
+        modalRef.current?.querySelectorAll<HTMLElement>('button, a[href], input, [tabindex]:not([tabindex="-1"])') ?? [],
+      ).filter((el) => !el.hasAttribute('disabled'));
+    focusables()[0]?.focus();
     const onKey = (e: KeyboardEvent) => {
-      if (e.key === 'Escape' && !redirecting) setMode(null);
+      if (e.key === 'Escape' && !redirecting) {
+        setMode(null);
+        return;
+      }
+      if (e.key !== 'Tab') return;
+      const items = focusables();
+      if (items.length === 0) return;
+      const first = items[0];
+      const last = items[items.length - 1];
+      const active = document.activeElement;
+      if (e.shiftKey && (active === first || !modalRef.current?.contains(active))) {
+        e.preventDefault();
+        last.focus();
+      } else if (!e.shiftKey && (active === last || !modalRef.current?.contains(active))) {
+        e.preventDefault();
+        first.focus();
+      }
     };
     document.addEventListener('keydown', onKey);
     document.body.style.overflow = 'hidden';
     return () => {
       document.removeEventListener('keydown', onKey);
       document.body.style.overflow = '';
+      opener?.focus?.();
     };
   }, [mode, redirecting]);
 
@@ -46,10 +70,10 @@ export default function AuthModal() {
       className="ovl"
       role="dialog"
       aria-modal="true"
-      aria-label={mode === 'signup' ? 'Start your free trial' : 'Welcome back'}
+      aria-label={mode === 'signup' ? 'Start your 7-day free trial' : 'Welcome back'}
       onClick={() => !redirecting && setMode(null)}
     >
-      <div className="modal" onClick={(e) => e.stopPropagation()}>
+      <div className="modal" ref={modalRef} onClick={(e) => e.stopPropagation()}>
         {!redirecting && (
           <button className="close" onClick={() => setMode(null)} aria-label="Close">×</button>
         )}
@@ -69,10 +93,10 @@ export default function AuthModal() {
               <span className="mlogo">
                 <span className="plokr-logo">plokr<i className="nub" aria-hidden="true" /></span>
               </span>
-              <h3>{mode === 'signup' ? 'Start your free trial' : 'Welcome back'}</h3>
+              <h3>{mode === 'signup' ? 'Start your 7-day free trial' : 'Welcome back'}</h3>
               <p className="msub">
                 {mode === 'signup'
-                  ? 'Connect your tools and see progress in minutes. No credit card required.'
+                  ? 'Pick Individual or Team, add a card, and your trial starts. Nothing is charged until day 8.'
                   : 'Sign in to your Plokr workspace to continue.'}
               </p>
             </div>
@@ -113,11 +137,11 @@ export default function AuthModal() {
               <div className="switch">
                 {mode === 'signup' ? (
                   <span>Already have an account?{' '}
-                    <a onClick={() => setMode('login')} role="button" tabIndex={0}>Log in</a>
+                    <button type="button" className="linklike" onClick={() => setMode('login')}>Log in</button>
                   </span>
                 ) : (
                   <span>New to Plokr?{' '}
-                    <a onClick={() => setMode('signup')} role="button" tabIndex={0}>Start free trial</a>
+                    <button type="button" className="linklike" onClick={() => setMode('signup')}>Start 7-day free trial</button>
                   </span>
                 )}
               </div>
