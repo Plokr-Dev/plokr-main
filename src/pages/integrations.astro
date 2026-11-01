@@ -3,24 +3,24 @@ import Layout from '../layouts/Layout.astro';
 import { PLOKR_APP } from '../lib/constants';
 
 const integ = [
-  { bg: '#2A6FDB', letter: 'J', name: 'Jira',      type: 'Issue tracking',        feats: ['Boards, sprints & epics','Issues, status & assignees','Real-time sync'] },
+  { bg: '#2A6FDB', letter: 'J', name: 'Jira',      type: 'Issue tracking',        feats: ['Projects & issues','Status & assignees'] },
   { bg: '#1F2328', letter: 'G', name: 'GitHub',    type: 'Source & dependencies', feats: ['Repos & branches','Manifests & lockfiles','Public and private'] },
-  { bg: '#2563EB', letter: 'B', name: 'Bitbucket', type: 'Source & dependencies', feats: ['Repos & branches','Manifests & lockfiles','Cloud & Server'] },
+  { bg: '#2563EB', letter: 'B', name: 'Bitbucket', type: 'Source & dependencies', feats: ['Repos & branches','Manifests & lockfiles'] },
   { bg: '#E2432A', letter: 'L', name: 'GitLab',    type: 'Source & dependencies', feats: ['Projects & repos','Manifests & lockfiles','Self-managed or SaaS'] },
-  { bg: '#0B66C3', letter: 'T', name: 'Trello',    type: 'Boards',                feats: ['Cards, lists & labels','Members & due dates','Workspace-wide'] },
+  { bg: '#0B66C3', letter: 'T', name: 'Trello',    type: 'Boards',                feats: ['Boards, lists & cards','Members'] },
 ];
 ---
 
 <Layout
   title="Integrations | Plokr"
-  description="Connect Jira, GitHub, Bitbucket, GitLab, and Trello with read-only OAuth. Authorize in a click, scope exactly what it can read, and revoke anytime."
+  description="Connect GitHub, Bitbucket, GitLab, Jira and Trello to Plokr. You choose what to connect and can disconnect at any time."
   current="integrations"
 >
   <header class="phero">
     <div class="wrap" style="text-align:center">
       <span class="eyebrow" style="margin:0 auto">Integrations</span>
       <h1 style="margin:20px auto 0">Connect the tools your team already runs on.</h1>
-      <p class="lede" style="margin:22px auto 0">Plokr links to your issue trackers and code hosts with read-only OAuth. Authorize in a click, scope exactly what it can read, and revoke anytime.</p>
+      <p class="lede" style="margin:22px auto 0">Plokr links to your code hosts and issue trackers. You choose what to connect and can disconnect at any time.</p>
       <div class="cta" style="justify-content:center">
         <a class="btn btn-primary btn-lg" href={PLOKR_APP} data-auth="signup">Start 7-day free trial</a>
         <a class="btn btn-line btn-lg" href="/docs">Read setup docs</a>
@@ -45,15 +45,14 @@ const integ = [
             </ul>
             <div class="row">
               <a class="btn btn-line" href={PLOKR_APP} data-auth="signup" style="flex:1">Connect</a>
-              <span class="ro">READ-ONLY</span>
             </div>
           </article>
         ))}
 
         <!-- Placeholder card -->
         <div class="intcard" style="justify-content:center;align-items:center;text-align:center;border-style:dashed;background:transparent">
-          <div class="nm" style="color:var(--muted)">More on the way</div>
-          <p style="font-size:13.5px;color:var(--muted);margin:10px 0 16px">Azure DevOps, Linear &amp; more are in progress.</p>
+          <div class="nm" style="color:var(--muted)">Something missing?</div>
+          <p style="font-size:13.5px;color:var(--muted);margin:10px 0 16px">Need another integration? Tell us.</p>
           <a class="btn btn-line" href="/contact">Request an integration</a>
         </div>
       </div>
@@ -64,13 +63,13 @@ const integ = [
     <div class="wrap">
       <div class="sec-head">
         <span class="ftag">How connections work</span>
-        <h2 style="margin-top:16px">Authorize-first, read-only, revocable.</h2>
+        <h2 style="margin-top:16px">Authorize-first and revocable.</h2>
       </div>
       <div class="steps">
         {[
-          ['01','Authorize with OAuth','Click connect and approve the exact scopes you want. Plokr can see nothing until you do.'],
-          ['02','Read-only sync','Plokr reads boards and manifests on a schedule and on push — it never writes to your tools.'],
-          ['03','Revoke anytime','Disconnect any integration instantly from settings; access and stored tokens are removed.'],
+          ['01','Authorize first','Plokr can see nothing until you connect a tool with credentials you provide.'],
+          ['02','Plokr reads what you connect','Plokr reads repository manifests and lockfiles, and the Jira or Trello data you connect.'],
+          ['03','Revoke anytime','Disconnect any integration instantly from settings; access and stored credentials are removed.'],
         ].map(([n, t, d]) => (
           <div class="step"><span class="n">{n}</span><h3>{t}</h3><p>{d}</p></div>
         ))}

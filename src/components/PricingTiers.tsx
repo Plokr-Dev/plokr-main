@@ -5,7 +5,7 @@ type Billing = 'monthly' | 'annual';
 
 const INCLUDED_FEATURES = [
   'Every feature included',
-  'Jira, Trello and repo monitoring',
+  'Repository dependency scanning',
   'Dependency and security scans',
   'Alerts, webhooks and audit logs',
   'Role-based access',

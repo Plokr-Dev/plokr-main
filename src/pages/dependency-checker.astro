@@ -13,7 +13,7 @@ const repos = [
 const dotColor: Record<string, string> = { vuln: '#EF4444', out: '#F59E0B', ok: '#10B981' };
 
 const feats = [
-  ['Continuous scanning', 'Every push and on a schedule, Plokr re-scans manifests and lockfiles across all your repos — GitHub, Bitbucket and GitLab.'],
+  ['Continuous scanning', 'On a schedule and on pull-request events, Plokr re-scans manifests and lockfiles across all your repos — GitHub, Bitbucket and GitLab.'],
   ['Severity-ranked CVEs', 'Vulnerabilities are ranked by severity and exploitability with linked CVE detail, so you fix what actually matters first.'],
   ['Outdated detection', 'Track packages drifting behind latest, with safe-upgrade suggestions and breaking-change warnings.'],
   ['One-click PR drafts', 'Generate upgrade pull requests with changelog context, ready for your team to review and merge.'],
@@ -46,10 +46,10 @@ const ecosystems = ['npm','pnpm','yarn','pip / PyPI','Poetry','Maven','Gradle','
         </div>
       </div>
 
-      <div class="card" style="background:var(--navy2);border-color:rgba(255,255,255,.1)" aria-label="Dependency risk dashboard preview">
+      <div class="card" style="background:var(--navy2);border-color:rgba(255,255,255,.1)" aria-label="Sample dependency risk dashboard">
         <div class="ch" style="border-color:rgba(255,255,255,.08)">
-          <span class="t" style="color:#fff">Dependency risk · acme org</span>
-          <span class="chip" style="color:rgba(255,255,255,.5);border-color:rgba(255,255,255,.14)">14 repos</span>
+          <span class="t" style="color:#fff">Dependency risk (sample data)</span>
+          <span class="chip" style="color:rgba(255,255,255,.5);border-color:rgba(255,255,255,.14)">sample data</span>
         </div>
         {repos.map(r => (
           <div class="reporow">

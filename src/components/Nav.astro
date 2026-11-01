@@ -32,14 +32,14 @@ const isIntegrate = urlPath.startsWith('/integrate/');
               <span class="di"><Zap strokeWidth={1.8} /></span>
               <span><b>Core Features</b></span>
             </div>
-            <!-- TODO(T4-06): hidden for launch — sub-pages /core/jira-monitoring,
+            <!-- TODO(T4-06): hidden for launch — sub-pages
                  /core/dependency-checker and /core/security don't exist yet.
                  Re-add the per-feature items once those .astro pages are created. -->
             <a class={`dditem ${isCore ? 'active' : ''}`} href="/core/" role="menuitem">
               <span class="di" aria-hidden="true">
                 <Zap strokeWidth={1.8} />
               </span>
-              <span><b>Plokr Core overview</b><span>Jira monitoring, dependency health &amp; security</span></span>
+              <span><b>Plokr Core overview</b><span>Dependency health &amp; security</span></span>
             </a>
           </div>
 

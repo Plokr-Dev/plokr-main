@@ -10,8 +10,9 @@ import './headers.test.mjs';
 import './build-output.test.mjs';
 import './contact-form-endpoint.test.mjs';
 import './pricing.test.mjs';
+import './retired-claims.test.mjs';
 
-const REGISTERED = ['build-output.test.mjs', 'contact-form-endpoint.test.mjs', 'headers.test.mjs', 'pricing.test.mjs'];
+const REGISTERED = ['build-output.test.mjs', 'contact-form-endpoint.test.mjs', 'headers.test.mjs', 'pricing.test.mjs', 'retired-claims.test.mjs'];
 const onDisk = readdirSync(dirname(fileURLToPath(import.meta.url))).filter((f) => f.endsWith('.test.mjs')).sort();
 const unregistered = onDisk.filter((f) => !REGISTERED.includes(f));
 if (unregistered.length > 0) {

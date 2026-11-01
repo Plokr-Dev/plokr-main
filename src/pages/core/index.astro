@@ -1,21 +1,7 @@
 ---
 import Layout from '../../layouts/Layout.astro';
 import { PLOKR_APP } from '../../lib/constants';
-import { LayoutGrid, Network } from 'lucide-react';
-
-// Jira Monitoring data
-const cols = [
-  { title: 'To Do',       status: 'todo',  dot: '#7C3AED', cards: [['PAY-301','Add 3DS fallback flow','SA'], ['PAY-340','Webhook signature rotation','ML']] },
-  { title: 'In Progress', status: 'prog',  dot: '#3B82F6', cards: [['PAY-318','Reconcile Stripe retries','ML'], ['PAY-310','Ledger → decimal','JD']] },
-  { title: 'Blocked',     status: 'block', dot: '#EF4444', cards: [['PAY-322','Refund idempotency keys','RK']] },
-  { title: 'Done',        status: 'ok',    dot: '#10B981', cards: [['PAY-298','Payout audit log','TM'], ['PAY-289','Rate-limit refunds','ML']] },
-];
-
-const jiraFeats = [
-  ['Stale & blocked detection', 'Plokr flags issues sitting untouched past your threshold and surfaces blockers the moment a dependency link goes red.'],
-  ['Sprint health & burndown', 'Live burndown, scope-creep tracking, and a single health score per sprint — without opening Jira.'],
-  ['Workload balance', 'See load distribution across assignees, squads, and epics so no one silently becomes a bottleneck.'],
-];
+import { Network } from 'lucide-react';
 
 // Dependency Checker data
 const repos = [
@@ -24,8 +10,6 @@ const repos = [
   { name: 'acme/web-dashboard', branch: 'main', outdated: '5 outdated', vuln: '0 vuln', status: 'out'  },
   { name: 'acme/payments-sdk',  branch: 'main', outdated: '1 outdated', vuln: '1 vuln', status: 'vuln' },
 ];
-
-const dotColor: Record<string, string> = { vuln: '#EF4444', out: '#F59E0B', ok: '#10B981' };
 
 const depsFeats = [
   ['Continuous scanning', 'Every push and on a schedule, Plokr re-scans manifests and lockfiles across all your repos — GitHub, Bitbucket and GitLab.'],
@@ -36,7 +20,7 @@ const depsFeats = [
 
 <Layout
   title="Core | Plokr"
-  description="Mission control for engineering — real-time Jira monitoring and dependency scanning. Stay ahead of slippage, blockers, and security vulnerabilities."
+  description="Dependency scanning and security findings for engineering teams, with ranked risk and safe-upgrade suggestions."
   current="core"
 >
   <header class="phero dark" style="padding-bottom:64px">
@@ -48,36 +32,25 @@ const depsFeats = [
         </nav>
         <span class="eyebrow">Core</span>
         <h1>Mission control for <em>engineering</em>.</h1>
-        <p class="lede">Plokr brings together real-time visibility into Jira progress and dependency health across every repo — so you stay ahead of slippage, blockers, and vulnerabilities.</p>
+        <p class="lede">Plokr scans the dependencies in your repos, and ranks the risk by severity and exploitability.</p>
         <div class="cta">
           <a class="btn btn-primary btn-lg" href={PLOKR_APP} data-auth="signup">Start 7-day free trial</a>
           <a class="btn btn-line btn-lg" href="/contact" style="background:rgba(255,255,255,.06);border-color:rgba(255,255,255,.22);color:#fff">Book a demo</a>
         </div>
       </div>
 
-      <div class="card" style="background:var(--navy2);border-color:rgba(255,255,255,.1)" aria-label="Core dashboard preview">
+      <div class="card" style="background:var(--navy2);border-color:rgba(255,255,255,.1)" aria-label="Sample dependency risk by repository">
         <div class="ch" style="border-color:rgba(255,255,255,.08)">
-          <span class="t" style="color:#fff">Sprint 24 · Payments squad</span>
-          <span class="chip" style="color:rgba(255,255,255,.5);border-color:rgba(255,255,255,.14)">live</span>
+          <span class="t" style="color:#fff">Dependency risk</span>
+          <span class="chip" style="color:rgba(255,255,255,.5);border-color:rgba(255,255,255,.14)">sample data</span>
         </div>
-        <div style="padding:14px">
-          <div class="kanban">
-            {cols.map(col => (
-              <div class="kcol">
-                <div class="kh">
-                  <span>{col.title}</span>
-                  <span class="ct">{col.cards.length}</span>
-                </div>
-                {col.cards.map(([id, title, initials]) => (
-                  <div class="kcard">
-                    <div class="kk">{id}</div>
-                    <div class="kt">{title}</div>
-                    <div class="kf">
-                      <span class="kdot" style={`background:${col.dot}`}></span>
-                      <span class="ava" style={`background:${col.dot}`}>{initials}</span>
-                    </div>
-                  </div>
-                ))}
+        <div style="padding:16px">
+          <div style="display:flex;flex-direction:column;gap:12px;font-size:13px">
+            {repos.map(r => (
+              <div style="display:flex;align-items:center;gap:10px;padding:10px;background:rgba(255,255,255,.02);border-radius:6px;border:1px solid rgba(255,255,255,.06)">
+                <span class={`rdot ${r.status}`}></span>
+                <span style="flex:1;color:rgba(255,255,255,.7)">{r.name}</span>
+                <span style="color:rgba(255,255,255,.5)">{r.outdated} · {r.vuln}</span>
               </div>
             ))}
           </div>
@@ -85,30 +58,6 @@ const depsFeats = [
       </div>
     </div>
   </header>
-
-  <!-- Jira Monitoring Section -->
-  <section class="sec">
-    <div class="wrap">
-      <div class="sec-head">
-        <span class="ftag">Jira Monitoring</span>
-        <h2 style="margin-top:16px">Real-time command of every board.</h2>
-        <p>Live burndown, blocked issues, at-risk sprint detection, and workload balance across all your Jira and Trello projects.</p>
-      </div>
-      <div class="grid3">
-        {jiraFeats.map(([title, desc]) => (
-          <div class="feat-card">
-            <span class="ic" aria-hidden="true">
-              <LayoutGrid strokeWidth={1.8} />
-            </span>
-            <h3>{title}</h3><p>{desc}</p>
-          </div>
-        ))}
-      </div>
-      <div style="text-align:center;margin-top:32px">
-        <a href="/jira-monitoring" class="btn btn-line">Explore Jira Monitoring</a>
-      </div>
-    </div>
-  </section>
 
   <!-- Dependency Checker Section -->
   <section class="sec soft">
@@ -134,50 +83,29 @@ const depsFeats = [
     </div>
   </section>
 
-  <!-- Metrics bar -->
-  <section class="sec alt tight">
-    <div class="wrap">
-      <div class="metricrow">
-        {[['62%','Avg sprint progress'],['3.1d','Mean time-to-unblock'],['-40%','Stale issues after 30 days'],['100%','Repos scanned']].map(([v, label]) => (
-          <div class="metric">
-            <div class="mv">{v}</div>
-            <div class="ml">{label}</div>
-          </div>
-        ))}
-      </div>
-    </div>
-  </section>
-
   <!-- Integrated view section -->
   <section class="sec">
     <div class="wrap">
       <div class="frow">
         <div>
           <span class="ftag">Unified visibility</span>
-          <h2>One pane of glass for delivery and security.</h2>
-          <p class="lead">Plokr brings Jira progress and dependency health together on one dashboard — so leaders see the full picture: what's moving, what's stuck, and where your code is at risk.</p>
+          <h2>Dependency risk, ranked.</h2>
+          <p class="lead">Plokr ranks the risk in your dependencies, so leaders can see what is exposed and engineers can see what to fix.</p>
           <ul class="checklist">
-            {['Cross-project sprint rollups','Real-time dependency risk dashboard','Predictive at-risk sprint flags','Email and webhook alerts'].map(t => (
+            {['Dependency risk ranked by severity','Safe-upgrade suggestions','Email digests and outbound webhooks'].map(t => (
               <li><span class="tick" aria-hidden="true">✓</span>{t}</li>
             ))}
           </ul>
         </div>
         <div class="card">
-          <div class="ch"><span class="t">Risk & progress · live</span><span class="chip">All teams</span></div>
-          <div style="padding:16px">
-            <div style="display:flex;flex-direction:column;gap:12px;font-size:13px">
-              {repos.slice(0, 3).map(r => (
-                <div style="display:flex;align-items:center;gap:10px;padding:10px;background:rgba(255,255,255,.02);border-radius:6px;border:1px solid rgba(255,255,255,.06)">
-                  <span class="rdot" style={`background:${dotColor[r.status]};width:8px;height:8px;border-radius:50%`}></span>
-                  <span style="flex:1;color:rgba(255,255,255,.7)">{r.name}</span>
-                  <span style="color:rgba(255,255,255,.5)">{r.vuln}</span>
-                </div>
-              ))}
+          <div class="ch"><span class="t">Dependency risk</span><span class="chip">sample data</span></div>
+          {repos.slice(0, 3).map(r => (
+            <div class="drow">
+              <span class="pkg">{r.name}</span>
+              <span class={`tag ${r.status}`}>{r.vuln}</span>
             </div>
-            <div style="padding-top:12px;border-top:1px solid rgba(255,255,255,.06);margin-top:12px;text-align:center;color:var(--muted);font-size:12px">
-              + {repos.length - 3} more repos
-            </div>
-          </div>
+          ))}
+          <div class="drow"><span class="ver">+ {repos.length - 3} more repos</span></div>
         </div>
       </div>
     </div>
@@ -188,7 +116,7 @@ const depsFeats = [
     <div class="wrap">
       <div class="box">
         <h2>Get your entire pipeline under control.</h2>
-        <p>Connect Jira and your repos in minutes — Plokr watches every sprint and vulnerability for you.</p>
+        <p>Connect your repos and see your first ranked findings.</p>
         <div class="cta">
           <a class="btn btn-primary btn-lg" href={PLOKR_APP} data-auth="signup" style="background:#fff;color:#0C1A2B">Start 7-day free trial</a>
           <a class="btn btn-line btn-lg" href="/pricing">See pricing</a>

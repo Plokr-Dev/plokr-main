@@ -132,7 +132,7 @@ export default function AuthModal() {
             <div className="foot">
               <div className="lockline">
                 <Lock strokeWidth={2} aria-hidden="true" />
-                Read-only access · you authorize every connection
+                Scoped access · you authorize every connection
               </div>
               <div className="switch">
                 {mode === 'signup' ? (

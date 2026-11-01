@@ -15,7 +15,7 @@ interface Props {
 
 const {
   title,
-  description = 'Plokr gives engineering leaders real-time visibility into Jira progress and dependency health across every repo.',
+  description = 'Plokr scans the dependencies in your repos and ranks the risk by severity.',
   canonical,
   ogImage = '/og-default.png',
   current = '',
@@ -71,7 +71,7 @@ const canonicalURL = canonical ?? new URL(Astro.url.pathname, Astro.site).toStri
         "@type": "Organization",
         "name": "Plokr",
         "url": "https://plokr.com",
-        "description": "Mission control for engineering — real-time Jira monitoring and dependency health.",
+        "description": "Dependency scanning and security tooling for engineering teams.",
         "sameAs": []
       }
     </script>

@@ -4,19 +4,8 @@ import PricingTiers from '../components/PricingTiers';
 import { PLOKR_APP, SITE_DESCRIPTION } from '../lib/constants';
 import { Lock, Eye, ScanLine, ShieldCheck, GitBranch, Zap } from 'lucide-react';
 
-// Heatmap data computed at build time (no client JS needed)
-const heatCells = Array.from({ length: 7 * 18 }, (_, i) => {
-  const day = i % 7;
-  const wk = Math.floor(i / 7);
-  let v = ((Math.sin(wk * 0.6 + 1) + 1) / 2) * 0.55 + 0.12 + ((i * 37) % 5) / 14;
-  if (day === 5) v *= 0.5;
-  if (day === 6) v *= 0.35;
-  return Math.max(0.06, Math.min(1, v));
-});
-
 const sparkBlue = [40, 55, 48, 70, 62, 80, 72, 90];
 const sparkGreen = [88, 90, 86, 91, 89, 93, 91, 91];
-const bars = [['M',70,52],['T',55,60],['W',80,46],['T',62,72],['F',48,58],['S',20,16],['S',14,10]];
 ---
 
 <Layout
@@ -31,8 +20,8 @@ const bars = [['M',70,52],['T',55,60],['W',80,46],['T',62,72],['F',48,58],['S',2
     "@type": "SoftwareApplication",
     "name": "Plokr",
     "applicationCategory": "DeveloperApplication",
-    "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
-    "description": "Real-time Jira monitoring and dependency health for engineering teams."
+    "offers": { "@type": "Offer", "price": "29", "priceCurrency": "USD" },
+    "description": "Security scanning and dependency health for engineering teams."
   }
   </script>
 
@@ -42,28 +31,27 @@ const bars = [['M',70,52],['T',55,60],['W',80,46],['T',62,72],['F',48,58],['S',2
       <!-- Core Hero (Left) -->
       <div class="hero-col">
         <span class="eyebrow">▮ PLOKR CORE</span>
-        <h1>Monitor & <em>Secure</em> Delivery</h1>
-        <p class="sub">Real-time visibility into Jira progress and dependency health. Catch blockers and vulnerabilities before they cost a release.</p>
+        <h1>Find the risk. <em>Track</em> the fix.</h1>
+        <p class="sub">Scan the dependencies in your repos and rank the risk by severity, so your team fixes what matters first.</p>
         <div class="cta">
           <a class="btn btn-primary btn-lg" href={PLOKR_APP} data-auth="signup">Start 7-day free trial</a>
         </div>
         <div class="trust">
-          <span><b>200+</b> teams</span>
-          <span><b>14k</b> repos</span>
-          <span><b>SOC 2</b> Type II</span>
+          <span><b>Authorize-first</b> scanning</span>
+          <span><b>Authorize-first</b> access</span>
         </div>
       </div>
 
       <!-- Core Panel -->
-      <div class="panel" role="img" aria-label="Engineering overview dashboard showing sprint progress and dependency health">
+      <div class="panel" role="img" aria-label="Sample dashboard showing open findings and dependency health">
         <div class="ph">
-          <span class="t">Engineering Overview</span>
-          <span class="live" aria-label="Live data">LIVE</span>
+          <span class="t">Overview (sample data)</span>
+          <span class="live" aria-label="Sample data">SAMPLE</span>
         </div>
         <div class="pgrid">
           <div class="kpi">
-            <div class="lab">Sprint progress</div>
-            <div class="num">62%<small>+8%</small></div>
+            <div class="lab">Open findings</div>
+            <div class="num">14<small>-3</small></div>
             <div class="spark" aria-hidden="true">
               {sparkBlue.map((h) => <i style={`height:${h}%`}></i>)}
             </div>
@@ -76,8 +64,8 @@ const bars = [['M',70,52],['T',55,60],['W',80,46],['T',62,72],['F',48,58],['S',2
             </div>
           </div>
           <div class="kpi">
-            <div class="lab">Blocked issues</div>
-            <div class="num">2<small class="bad">+1</small></div>
+            <div class="lab">Outdated packages</div>
+            <div class="num">9<small class="bad">+1</small></div>
           </div>
           <div class="kpi">
             <div class="lab">Vulnerabilities</div>
@@ -87,8 +75,8 @@ const bars = [['M',70,52],['T',55,60],['W',80,46],['T',62,72],['F',48,58],['S',2
         <div class="feed" aria-label="Recent alerts">
           {[
             ['#FDE9E9','✕','jsonwebtoken flagged — CVE-2022-23529','2m'],
-            ['#FEF3DC','!','PAY-322 blocked for 3 days','18m'],
-            ['#E6F7F1','✓','Sprint 24 burndown on track','1h'],
+            ['#FEF3DC','!','axios 1.4.0 outdated in web-dashboard','18m'],
+            ['#E6F7F1','✓','lodash upgraded in web-dashboard','1h'],
             ['#EAF1FE','↑','express 4.21.1 available in api-gateway','2h'],
           ].map(([bg, icon, text, time]) => (
             <div class="fr">
@@ -106,16 +94,16 @@ const bars = [['M',70,52],['T',55,60],['W',80,46],['T',62,72],['F',48,58],['S',2
   <section class="sec alt product-selector">
     <div class="wrap">
       <div class="selector-grid">
-        <a href="/jira-monitoring" class="selector-card core-card">
+        <a href="/core/" class="selector-card core-card">
           <div class="card-icon"><GitBranch strokeWidth={1.5} /></div>
           <h3>Plokr Core</h3>
-          <p>Monitor sprint progress, catch blockers, audit dependencies in real-time</p>
+          <p>Scan dependencies and rank the risk by severity</p>
           <span class="cta-text">Explore Core →</span>
         </a>
         <a href="/integrate" class="selector-card integrate-card">
           <div class="card-icon"><Zap strokeWidth={1.5} /></div>
           <h3>Plokr Integrate</h3>
-          <p>Self-service API for third-party integrations and custom automation</p>
+          <p>REST API, webhooks and data connectors for custom automation</p>
           <span class="cta-text">Explore Integrate →</span>
         </a>
       </div>
@@ -130,9 +118,8 @@ const bars = [['M',70,52],['T',55,60],['W',80,46],['T',62,72],['F',48,58],['S',2
         <span class="lgo"><span class="sq" style="background:#2A6FDB" aria-hidden="true"></span>Jira</span>
         <span class="lgo"><span class="sq" style="background:#1F2328" aria-hidden="true"></span>GitHub</span>
         <span class="lgo"><span class="sq" style="background:#2563EB" aria-hidden="true"></span>Bitbucket</span>
-        <span class="lgo"><span class="sq" style="background:#FF6B35" aria-hidden="true"></span>Stripe</span>
-        <span class="lgo"><span class="sq" style="background:#0B66C3" aria-hidden="true"></span>Snowflake</span>
-        <span class="lgo"><span class="sq" style="background:#EF3B39" aria-hidden="true"></span>Okta</span>
+        <span class="lgo"><span class="sq" style="background:#E2432A" aria-hidden="true"></span>GitLab</span>
+        <span class="lgo"><span class="sq" style="background:#0B66C3" aria-hidden="true"></span>Trello</span>
       </div>
     </div>
   </div>
@@ -140,52 +127,21 @@ const bars = [['M',70,52],['T',55,60],['W',80,46],['T',62,72],['F',48,58],['S',2
   <!-- CONDENSED DUAL SHOWCASES -->
   <section class="sec" id="platform">
     <div class="wrap">
-      <!-- Core Showcase -->
-      <div class="frow">
-        <div>
-          <span class="ftag">Jira monitoring</span>
-          <h2>Command every sprint in real-time.</h2>
-          <p class="lead">Live burndown, automated risk detection, and workload visibility without opening Jira.</p>
-          <ul class="checklist">
-            {['Live burndown and sprint progress','Automatic detection of blockers and at-risk issues','Workload balance across teams','Trend history for predictive insights'].map(t => (
-              <li><span class="tick" aria-hidden="true">✓</span>{t}</li>
-            ))}
-          </ul>
-          <a class="btn btn-line" href="/jira-monitoring" style="margin-top:24px">Explore →</a>
-        </div>
-        <div class="card" aria-label="Sprint board preview">
-          <div class="ch"><span class="t">Sprint 24 · Payments squad</span><span class="chip">updated 2m ago</span></div>
-          {[
-            ['PAY-318','Reconcile Stripe webhook retries','prog','In Progress','#D8F3E7','ML'],
-            ['PAY-322','Idempotency keys for refunds','block','Blocked','#FEE2E2','RK'],
-            ['PAY-310','Migrate ledger to decimal','prog','In Progress','#D8F3E7','JD'],
-            ['PAY-301','Add 3DS fallback flow','todo','To Do','#EDE9FE','SA'],
-          ].map(([id, title, status, label, color, initials]) => (
-            <div class="drow">
-              <span class="ver" style="width:60px;flex:none">{id}</span>
-              <span class="pkg" style="font-weight:500;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{title}</span>
-              <span class={`pill ${status}`}>{label}</span>
-              <span class="ava" style={`background:${color}`}>{initials}</span>
-            </div>
-          ))}
-        </div>
-      </div>
-
       <!-- Integrate Showcase -->
-      <div class="frow rev" style="margin-top:64px">
+      <div class="frow rev">
         <div>
           <span class="ftag">API & Integrations</span>
           <h2>Extend Plokr your way.</h2>
-          <p class="lead">Self-service GraphQL API for custom workflows, third-party integrations, and enterprise automation.</p>
+          <p class="lead">A REST API and data connectors for custom workflows, so you can move data in and out of Plokr.</p>
           <ul class="checklist">
-            {['Rate-optimized REST and GraphQL APIs','Webhook events for real-time workflows','SDKs for Node.js, Python, and Go','Enterprise-grade auth and audit logging'].map(t => (
+            {['REST API secured with scoped API keys','Webhooks for outbound events','SQL, S3 and queue connectors','Call any REST endpoint from a pipeline'].map(t => (
               <li><span class="tick" aria-hidden="true">✓</span>{t}</li>
             ))}
           </ul>
           <a class="btn btn-line" href="/integrate" style="margin-top:24px">Explore →</a>
         </div>
-        <div class="card" aria-label="Dependency audit preview">
-          <div class="ch"><span class="t mono" style="font-size:14px">acme/api-gateway</span><span class="chip">main · scanned 4m ago</span></div>
+        <div class="card" aria-label="Sample dependency audit">
+          <div class="ch"><span class="t mono" style="font-size:14px">acme/api-gateway</span><span class="chip">sample data</span></div>
           {[
             ['jsonwebtoken','8.5.1 → 9.0.2','vuln','CVE · high'],
             ['express','4.18.2 → 4.21.1','out','outdated'],
@@ -209,27 +165,10 @@ const bars = [['M',70,52],['T',55,60],['W',80,46],['T',62,72],['F',48,58],['S',2
     <div class="wrap">
       <div class="sec-head">
         <span class="ftag">Dashboards &amp; insights</span>
-        <h2 style="margin-top:16px">See progress the way you think about it.</h2>
-        <p>Velocity charts, dependency health, delivery heatmaps and more — Plokr turns raw activity across Jira and your repos into views your whole team can read at a glance.</p>
+        <h2 style="margin-top:16px">See your dependency health at a glance.</h2>
+        <p>Plokr scans your repos and shows how many packages are current, outdated or vulnerable. The figures below are sample data.</p>
       </div>
-      <div class="vizgrid">
-        <!-- Sprint velocity -->
-        <div class="vcard">
-          <div class="vh"><span class="t">Sprint velocity</span><span class="m">last 8</span></div>
-          <div class="big">38 <span style="font-size:14px;color:var(--ok);font-weight:600">pts/sprint</span></div>
-          <div class="sub">+12% vs. trailing average</div>
-          <svg viewBox="0 0 280 90" width="100%" height="90" style="margin-top:10px;display:block" preserveAspectRatio="none" aria-hidden="true">
-            <defs>
-              <linearGradient id="vg" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0" stop-color="#19C37D" stop-opacity="0.5"/>
-                <stop offset="1" stop-color="#19C37D" stop-opacity="0"/>
-              </linearGradient>
-            </defs>
-            <polygon points="0,72 40,60 80,64 120,44 160,50 200,30 240,36 280,18 280,90 0,90" fill="url(#vg)"/>
-            <polyline points="0,72 40,60 80,64 120,44 160,50 200,30 240,36 280,18" fill="none" stroke="#5FD0A2" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>
-          </svg>
-        </div>
-
+      <div class="vizgrid single">
         <!-- Dependency health donut -->
         <div class="vcard">
           <div class="vh"><span class="t">Dependency health</span><span class="m">142 pkgs</span></div>
@@ -243,50 +182,8 @@ const bars = [['M',70,52],['T',55,60],['W',80,46],['T',62,72],['F',48,58],['S',2
           </div>
         </div>
 
-        <!-- Bar chart -->
-        <div class="vcard">
-          <div class="vh"><span class="t">Opened vs. closed</span><span class="m">this sprint</span></div>
-          <div class="vbars" aria-hidden="true">
-            {bars.map(([label, open, closed]) => (
-              <div class="bg">
-                <i class="bi" style={`height:${open}%;background:#19C37D;opacity:.55`}></i>
-                <i class="bi" style={`height:${closed}%;background:#10B981`}></i>
-                <span class="lbl">{label}</span>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        <!-- Heatmap -->
-        <div class="vcard wide">
-          <div class="vh">
-            <span class="t">Delivery heatmap — issues resolved per day</span>
-            <span class="m">18 weeks · Payments squad</span>
-          </div>
-          <div class="heat" aria-label="Delivery heatmap" aria-hidden="true">
-            {heatCells.map((o) => (
-              <span style={`--o:${o.toFixed(3)}`}></span>
-            ))}
-          </div>
-          <div class="heatfoot">
-            <span class="lab">Apr — May — Jun — Jul — Aug</span>
-            <span class="heatlegend" aria-hidden="true">
-              less
-              <i style="background:rgba(25,195,125,.12)"></i>
-              <i style="background:rgba(25,195,125,.35)"></i>
-              <i style="background:rgba(25,195,125,.6)"></i>
-              <i style="background:rgba(25,195,125,.9)"></i>
-              more
-            </span>
-          </div>
-        </div>
       </div>
 
-      <div class="vchips" aria-label="Available chart types">
-        {['Burndown','Cycle time','Cumulative flow','Risk trends','Workload balance','Lead time','Vulnerability aging','Custom views'].map(c => (
-          <span class="vchip">{c}</span>
-        ))}
-      </div>
     </div>
   </section>
 
@@ -297,13 +194,13 @@ const bars = [['M',70,52],['T',55,60],['W',80,46],['T',62,72],['F',48,58],['S',2
         <div>
           <span class="ftag">Data integrity</span>
           <h2>Your data stays yours.</h2>
-          <p class="lead">Plokr can't see anything until you connect a tool and approve exactly what it may read. Access is read-only by default, scoped to what you grant, and revocable in one click.</p>
+          <p class="lead">Plokr can't see anything until you connect a tool and approve what it may access. Access is scoped to what you grant and revocable in one click.</p>
           <div class="pillars" style="margin-top:30px">
             {[
               [Lock,'Authorize-first access','Plokr sees nothing until you connect a tool and approve its scopes — no data, ever, without consent.'],
-              [Eye,'Read-only by default','We never write to your boards, repos, or pipelines. Plokr observes; it doesn\'t touch your source of truth.'],
+              [Eye,'Reads your repos, writes only results','Plokr reads your repositories. When pull-request decoration is enabled, it posts a comment and a Quality Gate check run on the pull request. It does not change your code or make commits.'],
               [ScanLine,'Granular, revocable scopes','Grant access per project and per repo, and revoke any connection instantly from settings.'],
-              [ShieldCheck,'Encrypted & compliant','SOC 2 Type II, GDPR-ready, with data encrypted in transit and at rest.'],
+              [ShieldCheck,'Encrypted','Data is encrypted in transit and at rest.'],
             ].map(([Icon, title, desc]) => (
               <div class="pillar">
                 <span class="pi" aria-hidden="true">
@@ -317,16 +214,16 @@ const bars = [['M',70,52],['T',55,60],['W',80,46],['T',62,72],['F',48,58],['S',2
           <a class="btn btn-line" href="/security" style="margin-top:30px">Read about security →</a>
         </div>
         <div class="card" aria-label="Authorization scope example">
-          <div class="ch"><span class="t">Authorize Plokr</span><span class="chip">read-only · OAuth</span></div>
+          <div class="ch"><span class="t">Authorize Plokr</span><span class="chip">scoped access</span></div>
           {[
-            ['#2A6FDB','J','Jira — Payments project','Read issues, sprints & status'],
+            ['#2A6FDB','J','Jira — Payments project','Read projects & issues'],
             ['#1F2328','G','GitHub — acme/api-gateway','Read repo metadata & manifests'],
-            ['#0B66C3','T','Trello — Roadmap board','Read cards, lists & members'],
+            ['#0B66C3','T','Trello — Roadmap board','Read boards, lists & cards'],
           ].map(([bg, letter, name, desc]) => (
             <div class="scope">
               <span class="si" style={`background:${bg}`}>{letter}</span>
               <span class="sn"><b>{name}</b><span>{desc}</span></span>
-              <span class="ro">READ-ONLY</span>
+              <span class="ro">SCOPED</span>
             </div>
           ))}
           <div class="permfoot">
@@ -344,13 +241,13 @@ const bars = [['M',70,52],['T',55,60],['W',80,46],['T',62,72],['F',48,58],['S',2
       <div class="sec-head left">
         <span class="ftag">How it works</span>
         <h2 style="margin-top:16px">From connect to control in minutes.</h2>
-        <p>Read-only OAuth, zero agents, nothing to install. Authorize your tools and Plokr starts watching immediately.</p>
+        <p>Zero agents, nothing to install. Authorize your tools and choose what Plokr may access.</p>
       </div>
       <div class="steps">
         {[
-          ['01','Connect your stack','Authorize Jira, GitHub, Bitbucket, GitLab and Trello with read-only OAuth. Plokr never writes to your boards or repos.'],
-          ['02','Plokr monitors','We sync issues and scan dependencies continuously, building a live model of progress and risk across every project.'],
-          ['03','Act before it\'s late','Ranked alerts arrive in-app, by email, and via webhooks the moment work stalls or a package turns risky.'],
+          ['01','Connect your stack','Authorize GitHub, Bitbucket or GitLab. Plokr reads your repos, and posts results back to pull requests only when you enable it.'],
+          ['02','Plokr scans','We scan your dependencies and rank each finding by severity and exploitability.'],
+          ['03','Act before it\'s late','Ranked findings arrive in-app and by webhook, so you can fix the riskiest packages first.'],
         ].map(([n, title, desc]) => (
           <div class="step">
             <span class="n">{n}</span>
@@ -389,7 +286,7 @@ const bars = [['M',70,52],['T',55,60],['W',80,46],['T',62,72],['F',48,58],['S',2
     <div class="wrap">
       <div class="box">
         <h2>Ready to take control?</h2>
-        <p>Get real-time visibility into delivery and dependencies. Start your 7-day free trial today.</p>
+        <p>Find the risk in your dependencies and track the fix. Start your 7-day free trial today.</p>
         <div class="cta">
           <a class="btn btn-primary btn-lg" href={PLOKR_APP} data-auth="signup">Start 7-day free trial</a>
           <a class="btn btn-line btn-lg" href={PLOKR_APP} data-auth="login">Get Started</a>

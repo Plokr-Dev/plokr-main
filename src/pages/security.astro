@@ -6,7 +6,7 @@ import { ShieldCheck } from 'lucide-react';
 
 <Layout
   title="Security & Data Integrity | Plokr"
-  description="Read-only by design, authorize-first by default. Plokr is SOC 2 Type II, GDPR-ready, with data encrypted in transit and at rest."
+  description="Authorize-first by default, with scoped access. Plokr is built with GDPR in mind, with data encrypted in transit and at rest."
   current="security"
 >
   <header class="phero dark">
@@ -18,7 +18,7 @@ import { ShieldCheck } from 'lucide-react';
       </nav>
       <span class="eyebrow">Security &amp; data integrity</span>
       <h1>Your data <em>stays yours</em>.</h1>
-      <p class="lede">Plokr is built to earn the trust of security-conscious teams. Read-only by design, authorize-first by default, and never a place your customer data lives without explicit consent.</p>
+      <p class="lede">Plokr is built to earn the trust of security-conscious teams. Authorize-first by default, scoped to what you grant, and never a place your customer data lives without explicit consent.</p>
       <div class="cta">
         <a class="btn btn-primary btn-lg" href="/contact">Request security docs</a>
         <a class="btn btn-line btn-lg" href={PLOKR_APP} data-auth="signup" style="background:rgba(255,255,255,.06);border-color:rgba(255,255,255,.22);color:#fff">Start 7-day free trial</a>
@@ -36,7 +36,7 @@ import { ShieldCheck } from 'lucide-react';
       <div class="pillars" style="max-width:920px;margin:0 auto">
         {[
           ['Authorize-first access','Plokr sees nothing until you connect a tool and approve its scopes. No data is read without your explicit consent.'],
-          ['Read-only by default','We never write to your boards, repos, or pipelines. Plokr observes — it does not modify your source of truth.'],
+          ['Reads your repos, writes only results','Plokr reads your repositories. When pull-request decoration is enabled, it posts a comment and a Quality Gate check run on the pull request. It does not change your code or make commits.'],
           ['Granular, revocable scopes','Grant access per project and per repo, and revoke any connection instantly. Tokens are removed on disconnect.'],
           ['Encrypted & isolated','Data encrypted in transit (TLS 1.2+) and at rest (AES-256). Tokens are isolated per workspace.'],
         ].map(([title, desc]) => (
@@ -63,7 +63,7 @@ import { ShieldCheck } from 'lucide-react';
         <div class="ccbox ok">
           <h3><span class="mk" aria-hidden="true">✓</span>What Plokr reads</h3>
           <ul>
-            {['Jira & Trello board, sprint, and issue metadata','Repository names, branches, and commit metadata','Dependency manifests and lockfiles (e.g. package.json)','Public vulnerability advisories and CVE data'].map(t => (
+            {['Jira & Trello project and issue metadata, if you connect them','Repository names, branches, and commit metadata','Dependency manifests and lockfiles (e.g. package.json)','Public vulnerability advisories and CVE data'].map(t => (
               <li><span class="mk" aria-hidden="true">✓</span>{t}</li>
             ))}
           </ul>
@@ -71,7 +71,7 @@ import { ShieldCheck } from 'lucide-react';
         <div class="ccbox no">
           <h3><span class="mk" aria-hidden="true">✕</span>What Plokr never does</h3>
           <ul>
-            {['Write, edit, or delete anything in your tools','Clone or store your source code','Access data outside the scopes you grant','Share or sell your data to third parties'].map(t => (
+            {['Change your code, make commits, or delete anything in your tools','Keep your source code after an audit finishes','Access data outside the scopes you grant','Share or sell your data to third parties'].map(t => (
               <li><span class="mk" aria-hidden="true">✕</span>{t}</li>
             ))}
           </ul>
@@ -87,24 +87,24 @@ import { ShieldCheck } from 'lucide-react';
         <div>
           <span class="ftag">Authorize-first</span>
           <h2>You approve every scope, and can revoke in one click.</h2>
-          <p class="lead">Connections use standard OAuth with the narrowest read-only scopes. You see exactly what each grant allows before approving, and disconnecting removes Plokr's access and stored tokens immediately.</p>
+          <p class="lead">You choose what to connect and what each connection may access. Disconnecting removes Plokr's access and stored credentials.</p>
           <ul class="checklist">
-            {['Least-privilege, read-only OAuth scopes','Per-project and per-repo granularity','Instant revocation from settings','Tokens encrypted and isolated per workspace'].map(t => (
+            {['Least-privilege access, scoped to what you connect','Per-project and per-repo granularity','Instant revocation from settings','Tokens encrypted and isolated per workspace'].map(t => (
               <li><span class="tick" aria-hidden="true">✓</span>{t}</li>
             ))}
           </ul>
         </div>
-        <div class="card" aria-label="OAuth authorization scope example">
-          <div class="ch"><span class="t">Authorize Plokr</span><span class="chip">read-only · OAuth</span></div>
+        <div class="card" aria-label="Authorization scope example">
+          <div class="ch"><span class="t">Authorize Plokr</span><span class="chip">scoped access</span></div>
           {[
-            ['#2A6FDB','J','Jira — Payments project','Read issues, sprints & status'],
+            ['#2A6FDB','J','Jira — Payments project','Read projects & issues'],
             ['#1F2328','G','GitHub — acme/api-gateway','Read repo metadata & manifests'],
-            ['#0B66C3','T','Trello — Roadmap board','Read cards, lists & members'],
+            ['#0B66C3','T','Trello — Roadmap board','Read boards, lists & cards'],
           ].map(([bg, letter, name, desc]) => (
             <div class="scope">
               <span class="si" style={`background:${bg}`}>{letter}</span>
               <span class="sn"><b>{name}</b><span>{desc}</span></span>
-              <span class="ro">READ-ONLY</span>
+              <span class="ro">SCOPED</span>
             </div>
           ))}
           <div class="permfoot">
@@ -125,8 +125,7 @@ import { ShieldCheck } from 'lucide-react';
       </div>
       <div class="badges">
         {[
-          ['SOC 2 Type II','Audited annually'],
-          ['GDPR','EU data ready · DPA available'],
+          ['GDPR','Built with GDPR in mind · DPA available'],
           ['Encryption','TLS 1.2+ · AES-256 at rest'],
           ['Audit logs','Full activity trail on every plan'],
         ].map(([title, sub]) => (
@@ -147,7 +146,7 @@ import { ShieldCheck } from 'lucide-react';
     <div class="wrap">
       <div class="box">
         <h2>Need our security package?</h2>
-        <p>We'll share our SOC 2 report, DPA, and architecture overview under NDA.</p>
+        <p>We'll share our DPA and answer your security questions.</p>
         <div class="cta">
           <a class="btn btn-primary btn-lg" href="/contact" style="background:#fff;color:#0C1A2B">Request documents</a>
           <a class="btn btn-line btn-lg" href="/dpa">Read the DPA</a>

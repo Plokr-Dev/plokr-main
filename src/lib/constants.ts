@@ -8,7 +8,7 @@ export const SITE_URL = 'https://plokr.com';
 export const SITE_NAME = 'Plokr';
 export const SITE_TAGLINE = 'Mission control for engineering';
 export const SITE_DESCRIPTION =
-  'Plokr gives engineering leaders real-time visibility into Jira progress and dependency health across every repo — so blockers and vulnerabilities surface before they cost a release.';
+  'Plokr scans the dependencies in your repos and ranks the risk by severity, so your team fixes what matters first.';
 
 // Product Definitions
 export const PRODUCT_NAMES = {
@@ -18,13 +18,13 @@ export const PRODUCT_NAMES = {
 
 export const PLOKR_CORE = {
   name: PRODUCT_NAMES.CORE,
-  description: 'Cloud SaaS platform for real-time visibility into Jira progress and dependency health',
+  description: 'Cloud SaaS platform for dependency health and security scanning',
   domain: 'https://plokr.com'
 } as const;
 
 export const PLOKR_INTEGRATE = {
   name: PRODUCT_NAMES.INTEGRATE,
-  description: 'Self-serve, on-premises solution for distributed security scanning',
+  description: 'Connectors and an API for moving data in and out of Plokr',
   domain: 'https://integrate.plokr.com'
 } as const;
 
