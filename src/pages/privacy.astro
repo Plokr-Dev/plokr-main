@@ -6,7 +6,6 @@ import Layout from '../layouts/Layout.astro';
     <div class="wrap-xs" style="padding:0 56px">
       <span class="eyebrow">Legal</span>
       <h1 style="font-size:44px">Privacy Policy</h1>
-      <p class="lede" style="font-size:16px;margin-top:14px">Last updated April 1, 2026</p>
       <div class="legaltabs">
         <a href="/privacy" class="on">Privacy</a>
         <a href="/terms">Terms</a>
@@ -16,22 +15,46 @@ import Layout from '../layouts/Layout.astro';
   </header>
   <article class="sec" style="padding-top:48px">
     <div class="wrap-xs">
-      <div class="prose">
+      <nav class="prose" aria-label="Language / Bahasa">
+        <p><a href="#privacy-en" hreflang="en" lang="en">English</a> · <a href="#privacy-ms" hreflang="ms" lang="ms">Bahasa Malaysia</a></p>
+      </nav>
+      <div class="prose" lang="en">
+        <h2 id="privacy-en" tabindex="-1">Privacy Policy (English)</h2>
+        <p>Last updated November 2, 2026</p>
         <p>This Privacy Policy explains how Plokr Sdn. Bhd. ("Plokr", "we") collects, uses, and protects information when you use our website and product.</p>
-        <h2>1. Information we collect</h2>
+        <h3>1. Information we collect</h3>
         <p>We collect account information you provide (such as name and work email), and operational metadata from the tools you connect — for example Jira board and issue metadata, repository names, and dependency manifests. <strong>We do not retain your source code.</strong> During a code audit, source code is processed on a temporary copy that is deleted when the audit finishes. Dependency scans read manifests and lockfiles only.</p>
-        <h2>2. How we use information</h2>
+        <h3>2. How we use information</h3>
         <p>We use information to operate the service: syncing your boards, scanning dependencies, generating insights and alerts, and supporting your account. We do not sell your data, and we do not use your connected data to train third-party models.</p>
-        <h2>3. Authorize-first access</h2>
+        <h3>3. Authorize-first access</h3>
         <p>Plokr accesses your connected tools only after you grant explicit, scoped authorization. You can revoke access at any time, which removes our access and stored tokens.</p>
-        <h2>4. Data retention</h2>
+        <h3>4. Data retention</h3>
         <p>We retain operational metadata for as long as your workspace is active. On disconnection or account closure, associated data and tokens are deleted within 30 days.</p>
-        <h2>5. Security</h2>
+        <h3>5. Security</h3>
         <p>Data is encrypted in transit (TLS 1.2+) and at rest (AES-256). Access tokens are isolated per workspace. See our <a href="/security">Security page</a> for more.</p>
-        <h2>6. Your rights</h2>
+        <h3>6. Your rights</h3>
         <p>Depending on your jurisdiction, you may have rights to access, correct, export, or delete your information. Contact <a href="mailto:privacy@plokr.com">privacy@plokr.com</a> to make a request.</p>
-        <h2>7. Contact</h2>
+        <h3>7. Contact</h3>
         <p>Questions about this policy? Email <a href="mailto:privacy@plokr.com">privacy@plokr.com</a>.</p>
+      </div>
+      <div class="prose" lang="ms">
+        <h2 id="privacy-ms" tabindex="-1">Notis Privasi (Bahasa Malaysia)</h2>
+        <p>Kemas kini terakhir 2 November 2026</p>
+        <p>Notis Privasi ini menerangkan cara Plokr Sdn. Bhd. ("Plokr", "kami") mengumpul, menggunakan dan melindungi maklumat apabila anda menggunakan laman web dan produk kami.</p>
+        <h3>1. Maklumat yang kami kumpulkan</h3>
+        <p>Kami mengumpul maklumat akaun yang anda berikan (seperti nama dan e-mel kerja), serta metadata operasi daripada alat yang anda sambungkan — contohnya metadata papan dan isu Jira, nama repositori dan manifes kebergantungan. <strong>Kami tidak menyimpan kod sumber anda.</strong> Semasa audit kod, kod sumber diproses pada salinan sementara yang dipadamkan apabila audit tamat. Imbasan kebergantungan hanya membaca manifes dan fail kunci (lockfile).</p>
+        <h3>2. Cara kami menggunakan maklumat</h3>
+        <p>Kami menggunakan maklumat untuk mengendalikan perkhidmatan: menyegerakkan papan anda, mengimbas kebergantungan, menjana pandangan dan amaran, serta menyokong akaun anda. Kami tidak menjual data anda, dan kami tidak menggunakan data tersambung anda untuk melatih model pihak ketiga.</p>
+        <h3>3. Akses dengan kebenaran terlebih dahulu</h3>
+        <p>Plokr hanya mengakses alat tersambung anda selepas anda memberikan kebenaran yang jelas dan terhad skopnya. Anda boleh menarik balik akses pada bila-bila masa, yang akan menamatkan akses kami dan token yang disimpan.</p>
+        <h3>4. Pengekalan data</h3>
+        <p>Kami menyimpan metadata operasi selagi ruang kerja anda aktif. Apabila sambungan diputuskan atau akaun ditutup, data dan token yang berkaitan dipadamkan dalam tempoh 30 hari.</p>
+        <h3>5. Keselamatan</h3>
+        <p>Data disulitkan semasa penghantaran (TLS 1.2+) dan semasa disimpan (AES-256). Token akses diasingkan bagi setiap ruang kerja. Sila lihat <a href="/security">halaman Keselamatan</a> kami untuk maklumat lanjut.</p>
+        <h3>6. Hak anda</h3>
+        <p>Bergantung pada bidang kuasa anda, anda mungkin mempunyai hak untuk mengakses, membetulkan, mengeksport atau memadamkan maklumat anda. Hubungi <a href="mailto:privacy@plokr.com">privacy@plokr.com</a> untuk membuat permintaan.</p>
+        <h3>7. Hubungi kami</h3>
+        <p>Ada soalan tentang notis ini? E-mel <a href="mailto:privacy@plokr.com">privacy@plokr.com</a>.</p>
       </div>
     </div>
   </article>
