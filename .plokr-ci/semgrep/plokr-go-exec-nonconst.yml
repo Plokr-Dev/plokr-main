@@ -1,0 +1,32 @@
+rules:
+  - id: plokr-go-exec-nonconst
+    message: >-
+      exec.Command/CommandContext with a non-constant command name, or a shell
+      invoked with a non-constant "-c" script. This is a command-injection
+      primitive. Use a constant binary name with separate, validated arguments,
+      or route the call through internal/sandbox.
+    severity: ERROR
+    languages: [go]
+    metadata:
+      cwe: "CWE-78: Improper Neutralization of Special Elements used in an OS Command"
+      category: security
+      source: plokr-ci
+    paths:
+      exclude:
+        - "internal/sandbox/**"
+    pattern-either:
+      - patterns:
+          - pattern: exec.Command($CMD, ...)
+          - pattern-not: exec.Command("...", ...)
+      - patterns:
+          - pattern: exec.CommandContext($CTX, $CMD, ...)
+          - pattern-not: exec.CommandContext($CTX, "...", ...)
+      - patterns:
+          - pattern-either:
+              - pattern: exec.Command($SH, "-c", $SCRIPT, ...)
+              - pattern: exec.CommandContext($CTX, $SH, "-c", $SCRIPT, ...)
+          - metavariable-regex:
+              metavariable: $SH
+              regex: ^"(/bin/|/usr/bin/)?(ba|z|da)?sh"$
+          - pattern-not: exec.Command($SH, "-c", "...", ...)
+          - pattern-not: exec.CommandContext($CTX, $SH, "-c", "...", ...)

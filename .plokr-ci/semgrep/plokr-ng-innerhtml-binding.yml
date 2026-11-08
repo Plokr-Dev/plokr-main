@@ -1,0 +1,16 @@
+rules:
+  - id: plokr-ng-innerhtml-binding
+    message: >-
+      [innerHTML] binding. Angular sanitizes it, but it is the usual entry point
+      for XSS once someone adds a bypassSecurityTrust* call upstream. Prefer
+      text interpolation; if HTML is required, sanitize at the source.
+    severity: WARNING
+    languages: [generic]
+    metadata:
+      cwe: "CWE-79: Improper Neutralization of Input During Web Page Generation (Cross-site Scripting)"
+      category: security
+      source: plokr-ci
+    paths:
+      include:
+        - "*.html"
+    pattern-regex: '\[innerHTML\]\s*='

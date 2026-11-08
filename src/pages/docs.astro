@@ -6,13 +6,13 @@ import { Zap, LayoutGrid, Network, Bell, Users, Code, Search } from 'lucide-reac
 const nav = [
   { group: 'Get started',   links: [{ label:'Introduction', active: true }, { label:'Quickstart' }, { label:'Core concepts' }] },
   { group: 'Connect tools', links: [{ label:'Jira & Trello' }, { label:'GitHub' }, { label:'Bitbucket' }, { label:'GitLab' }] },
-  { group: 'Monitoring',    links: [{ label:'Sprint health' }, { label:'Stale & blocked' }, { label:'Dependency scans' }, { label:'Alerts & webhooks' }] },
+  { group: 'Scanning',      links: [{ label:'Dependency scans' }, { label:'Alerts & webhooks' }] },
   { group: 'Platform',      links: [{ label:'Roles & access' }, { label:'API reference' }, { label:'Security' }] },
 ];
 
 const cards = [
-  { icon: Zap, title: 'Quickstart', desc: 'Connect your first tool and see insights in under five minutes.' },
-  { icon: LayoutGrid, title: 'Connect Jira & Trello', desc: 'Authorize boards, choose projects, and configure sync frequency.' },
+  { icon: Zap, title: 'Quickstart', desc: 'Connect your first repo and run your first scan.' },
+  { icon: LayoutGrid, title: 'Connect Jira & Trello', desc: 'Connect a Jira or Trello account with your own API credentials.' },
   { icon: Network, title: 'Dependency scanning', desc: 'How scans run, what\'s read, and how findings are ranked.' },
   { icon: Bell, title: 'Alerts & webhooks', desc: 'Set policies and route alerts to email and outbound webhooks.' },
   { icon: Users, title: 'Roles & access', desc: 'Invite teammates and manage role-based permissions.' },

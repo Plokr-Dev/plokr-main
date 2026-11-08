@@ -1,0 +1,6 @@
+# Repo-owned (created once by plokr-ci/sync.sh; not drift-checked).
+# Fingerprints of REVIEWED gitleaks findings that are not real secrets, mainly
+# historical commits where an inline `gitleaks:allow` comment is impossible.
+# One per line, as printed in the gitleaks JSON report "Fingerprint" field:
+#   <commit>:<file>:<rule-id>:<line>
+# Add a comment above each entry saying why it is safe.

@@ -1,0 +1,41 @@
+# Vendored by plokr-ci (profile: astro). DO NOT EDIT here; edit plokr-ci and
+# re-sync (.plokr-ci/check-drift.sh enforces this in CI and on pre-push).
+#
+# Install once per clone:   lefthook install
+# (lefthook: `go install github.com/evilmartians/lefthook/v2@v2.1.14`,
+#  `npm i -g lefthook`, `winget install evilmartians.lefthook` or `brew install lefthook`)
+#
+# pre-push is the compensating control for GitHub Free (no enforceable branch
+# protection on private repos). CI re-runs every gate regardless.
+
+pre-commit:
+  parallel: true
+  commands:
+    gitleaks:
+      run: bash .plokr-ci/hooks.sh gitleaks-staged
+    blocked-files:
+      run: bash .plokr-ci/check-blocked-files.sh --staged
+    eslint:
+      glob: "*.{ts,js,mjs,astro}"
+      run: bash .plokr-ci/hooks.sh eslint {staged_files}
+    lockfile-lint:
+      glob: "package-lock.json"
+      run: npx --yes lockfile-lint@5.0.1 --path package-lock.json --type npm --allowed-hosts npm --validate-https --validate-integrity
+
+commit-msg:
+  commands:
+    conventional-commits:
+      run: bash .plokr-ci/hooks.sh commit-msg {1}
+
+pre-push:
+  parallel: true
+  commands:
+    gitleaks:
+      use_stdin: true
+      run: bash .plokr-ci/hooks.sh gitleaks-push
+    semgrep:
+      run: bash .plokr-ci/hooks.sh semgrep
+    drift:
+      run: bash .plokr-ci/check-drift.sh
+    npm-audit:
+      run: bash .plokr-ci/hooks.sh npm-audit

@@ -1,0 +1,36 @@
+# Vendored by plokr-ci. DO NOT EDIT here; edit plokr-ci and re-sync (check-drift.sh enforces this).
+#
+# Extends the upstream gitleaks default ruleset; it never replaces it.
+#
+# Deliberately NO path-based allowlists: a path allowlist (e.g. "*.example",
+# "testdata/", "*_test.go") also hides a REAL key pasted into such a file.
+# Verified with gitleaks 8.30.1: an [[allowlists]] entry with condition = "AND"
+# and paths + regexes still suppressed a real-looking token on the path match
+# alone. So only the secret VALUE is matched below: placeholders, synthetic
+# test values and example keys. A real key never contains these words.
+# Escape hatch for anything else: an inline `gitleaks:allow` comment on the
+# offending line, which is visible and reviewed in the PR diff.
+title = "plokr gitleaks config"
+
+[extend]
+useDefault = true
+
+[[allowlists]]
+description = "Placeholder, example and synthetic secret values"
+regexTarget = "secret"
+stopwords = [
+  "change-me",
+  "changeme",
+  "change_me",
+  "placeholder",
+  "example",
+  "dummy",
+  "synthetic",
+  "not-a-real",
+  "notarealsecret",
+  "your-",
+  "xxxxxxxx",
+  "0123456789abcdef",
+  "abcdef0123456789",
+  "deadbeefdeadbeef",
+]

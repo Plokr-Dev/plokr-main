@@ -1,6 +1,21 @@
+# dependencies / build output
 node_modules/
 dist/
+.astro/
+.vercel/
+.wrangler/
+coverage/
+
+# environment + secrets (never commit; .env.example documents the variables)
 .env
+.env.*
+!.env.example
+*.pem
+*.key
+*.p12
+*.pfx
+
+# OS / logs
 .DS_Store
 *.log
 
