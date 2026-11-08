@@ -23,7 +23,7 @@ RUN npm run build
 
 # nginx-unprivileged runs as uid 101 (non-root) with pid/temp paths already
 # writable by that user.
-FROM nginxinc/nginx-unprivileged:stable-alpine@sha256:4714e0b1b2577eaa1a6131d07c958b67f0eb68e6d0521e90c6e5287db8cf0bc5
+FROM nginxinc/nginx-unprivileged:stable-alpine@sha256:f5116ed4606f3eb015dd4a8e28cb9b351476dc0ad4bc6e9f93b19cec130cdf03
 # Keep container port 80 (root compose maps 3000:80) while running non-root:
 # Docker (>= 20.10) and containerd set net.ipv4.ip_unprivileged_port_start=0
 # inside the container network namespace, so uid 101 can bind :80 with no
